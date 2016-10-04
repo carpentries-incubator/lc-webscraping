@@ -24,9 +24,11 @@ in the data.
 > As webscraping is a technique to extract data from web pages, it requires some understanding of
 > the technologies that are used to display information on the web. 
 > This lesson therefore assumes that learners will have some familiarity with the following:
+>
 > * [HTML](https://en.wikipedia.org/wiki/HTML)
 > * The [Document Object Model](https://en.wikipedia.org/wiki/Document_Object_Model) (DOM)
-> * [XQuery](https://en.wikipedia.org/wiki/XQuery)  
+> * [XQuery](https://en.wikipedia.org/wiki/XQuery)
+>  
 > The first part of this lesson will use browser extensions to introduce the concepts of web scraping
 > and requires no further specific knowledge. 
 > The second part will introduce the use of specialized libraries to scrape websites by writing
