@@ -38,9 +38,6 @@ This allows for exchange between incompatible systems and easier conversion of d
 > Note that HTML and XML have a very similar structure, which is why XPath can be used almost interchangeably to
 > navigate both HTML and XML documents. In fact, starting with HTML5, HTML documents are fully-formed XML documents.
 > In a sense, HTML is like a particular dialect of XML. 
-> 
-> For the sake of brevity, we will refer to XML only for the remainder of this section, but unless stated otherwise,
-> the information below applies both to XML and HTML documents.
 >
 {: .callout}
 
@@ -116,39 +113,107 @@ a web page.
 >
 {: .callout}
 
-FIXME starting here
+The HTML structure of the page you are currently reading looks something like this (most text and elements have
+been removed for clarity):
 
-## Selecting Nodes
+~~~
+<!doctype html>
+<html lang="en">
+  <head>
+    (...)
+    <title>Webscraping with Python: Selecting content on a web page with XPath and XQuery</title>
+  </head>
+  <body>
+	 (...)
+  </body>
+</html>
+~~~
+{: .output}
 
-In BaseX, bring up the tree visualization of your document to explore the tree and hover over your nodes.
+We can see from the source code that the title of this page is in a `title` element that is itself inside the
+`head` element, which is itself inside an `html` element that contains the entire content of the page.
 
-XPath understands XML as a tree data structure. XPath expressions are written in a way that represents searching and traversing through this tree. In other words, to select a node in XPath, you write the expression as if you are following a path or a number of steps to get to that node.
+Say we wanted to tell a web scraper to look for the title of this page, we would use this information to indicate the
+_path_ the scraper would need to follow at it navigates through the HTML content of the page to reach the `title` 
+element. XPath allows us to do that.
 
-![XML Node Tree](http://www.w3schools.com/xml/nodetree.gif)
+We can run XPath queries directly from within all major modern browsers, by enabling the built-in JavaScript console.
 
-Here are some common terminologies to describe the different parts of the XML document tree:
+> ## Display the console in your browser
+>
+> * In Firefox, use to the *Tools > Web Developer > Web Console* menu item.
+> * In Chrome, use the *View > Developer > JavaScript Console* menu item.
+> * In Safari, use the *Develop > Show Error Console* menu item. If your Safari browser doesn't have a Develop menu,
+>   you must first enable this option in the Preferences, see above.
+>
+{: .callout}
 
-**node** - A node is a unit in the document. A node can be an element node, an attribute node, a text node.
+Here is how the console looks like in the Firefox browser:
 
-**element** - XML trees are composed of connected XML elements in a hierarchy = nodes of the tree. An XML element is everything from (including) the element's start tag to (including) the element's end tag.
+![JavaScript console in Firefox]({{ page.root }}/fig/firefox-console.png)
 
-**level** - a level represents a hierarchical connection from one node to another
+For now, don't worry too much about error messages if you see any in the console when you open it. The console
+should display a _prompt_ with a `> ` character (`>>` in Firefox) inviting you to type commands.
 
-**path** - the sequence of connections from node to node
+The syntax to run an XPath query within the JavaScript console is `$x("XPATH_QUERY")`, for example:
 
-**root** - referring to the top of the hierarchy of your XML tree structure
+~~~
+> $x("/html/head/title/text()")
+~~~
+{: .source}
 
-**child** - a node connected directly under the node you're talking about (one level below current node)
+This should return something similar to
 
-**parent** - converse of child, the node connected above the element you're talking about  (one level above current node)
+~~~
+<- Array [ #text "Webscraping with Python: Selecting content on a web page with XPath and XQuery" ]
+~~~
+{: .output}
 
-**sibling** - nodes with same parent (same level as current node)
+The output can vary slightly based on the browser you are using. For example in Chrome, you have to "open" the
+return object by clicking on it in order to view its contents.
 
-## Abbreviated Syntax
+Let's look closer at the XPath query used in the example above: `/html/head/title/text()`. The first `/` indicates
+the _root_ of the document. With that query, we told the browser to 
 
-XPath uses the slash (/shell/fruit/seed) to denote traversal of the structure of your document in a path, in the same way as URLs or unix directories.
+|-----------------|:-------------|
+| `/`| Start at the root of the document... |
+| `html/`| ... navigate to the `html` node ... |
+| `head/`| ... then to the `head` node  that's inside it... |
+| `title/`| ... then to the `title` node that's inside it... |
+| `text()`| and select the text node contained in that element |
 
-In XPath, all of your expressions are evaluated based on a context node. The context node is the node that you're starting your path expression from. The default context is your root node, indicated by a single slash (/).
+Using this syntax, XPath thus allows us to determine the exact _path_ to a node. Before we look into other
+ways to reach a specific HTML node using XPath, let's start by looking closer at how nodes are arranged
+within a document and what their relationships with each others are.
+
+## Navigating through the HTML node tree using XPath
+
+A popular way to represent the structure of an XML or HTML document is the _node tree_:
+
+![HTML Node Tree](http://www.w3schools.com/js/pic_htmltree.gif)
+
+In an HTML document, everything is a node:
+
+* The entire document is a document node
+* Every HTML element is an element node
+* The text inside HTML elements are text nodes
+
+The nodes in such a tree have a hierarchical relationship to each other. We use the terms _parent_, _child_ and
+_sibling_ to describe these relationships:
+
+* In a node tree, the top node is called the *root* (or *root node*)
+* Every node has exactly one *parent*, except the root (which has no parent)
+* A node can have zero, one or several *children*
+* *Siblings* are nodes with the same parent
+* The sequence of connections from node to node is called a *path*
+
+![Node relationships](http://www.w3schools.com/js/pic_navigate.gif)
+
+Paths in XPath are defined using slashes (`/`) to separate the steps in a node connection sequence, much like
+URLs or Unix directories.
+
+In XPath, all expressions are evaluated based on a *context node*. The context node is the node in which a path
+starts from. The default context is the root node, indicated by a single slash (/), as in the example above.
 
 The most useful path expressions are listed below:
 
@@ -156,37 +221,92 @@ The most useful path expressions are listed below:
 |-----------------|:-------------|
 | ```nodename```| Select all nodes with the name "nodename"   |
 | ```/```  | A beginning single slash indicates a select from the root node, subsequent slashes indicate selecting a child node from current node  |
-| ```//``` | Select direct and indirect child nodes in the document from the current node - this gives you the ability to "skip levels" |
+| ```//``` | Select direct and indirect child nodes in the document from the current node - this gives us the ability to "skip levels" |
 | ```.```       | Select the current context node   |
 |```..```  | Select the parent of the context node|
-|```@```   |Select attributes|
-|`text()`| Select the value of an element|
+|```@```  | Select attributes of the context node|
+|```[@attribute = 'value']```   |Select nodes with a particular attribute value|
+|`text()`| Select the text content of a node|
 | &#124;|Pipe chains expressions and brings back results from either expression, think of a set union |
 
+FIXME this probably needs an easier challenge to start with.
 
-### Examples
+> ## Select this challenge box
+> Using an XPath query in the JavaScript console of your browser, select the element that contains the text
+> you are currently reading on this page.
+>
+> Tips: 
+> * In principle, `id` attributes in HTML are unique on a page. This means that if you know the `id`
+>   of the element you are looking for, you should be able to construct an XPath that looks for this value
+>   without having to worry about where in the node tree the target element is located.
+> * The syntax for selecting an element like `<div id="mytarget">` is `div[@id = 'mytarget']`.
+> * Remember that XPath queries are relative to a context node, and by default that node is the root node.
+> * Use the `//` syntax to select for elements regardless of where they are in the tree.
+> * The syntax to select the parent element relative to a context node is `..`
+> * The `$x(...)` JavaScript syntax will always return an array of nodes, regardless of the number of
+>   nodes returned by the query. Remembering that JavaScript uses _zero based indexing_, the syntax to get
+>   the first element of that array is therefore `$x(...)[0]`.
+> 
+> Make sure you select this entire challenge box. If the result of your query displays only the title of
+> this box, have a second look at the HTML structure of the document and try to figure out how to "expand"
+> your selection to the entire challenge box.
+>
+> > ## Solution
+> > Let's have a look at the HTML code of this page, around this challenge box (using the "View Source" option)
+> > in our browser). The code looks something like this:
+> > ~~~
+> > <!doctype html>
+> > <html lang="en">
+> >   <head>
+> >     (...)
+> >   </head>
+> >   <body>
+> > 	<div class="container">
+> > 	(...)
+> > 	  <blockquote class="challenge">
+> > 	    <h2 id="select-this-challenge-box">Select this challenge box</h2>
+> > 	    <p>Using an XPath query in the JavaScript console of your browser...</p>
+> > 	    (...)
+> > 	  </blockquote>
+> > 	(...)
+> > 	</div>
+> >   </body>
+> > </html>
+> > ~~~
+> > {: .output}
+> > 
+> > We know that the `id` attribute should be unique, so we can use this to select the `h2` element inside
+> > the challenge box:
+> > ~~~
+> > $x("//h2[@id = 'select-this-challenge-box']/..")[0]
+> > ~~~
+> > {: .source}
+> > 
+> > This should return something like
+> > ~~~
+> > <- <blockquote class="challenge">
+> > ~~~
+> > {: .output}
+> > 
+> > Let's walk through that syntax:
+> >
+> > |-----------------|:-------------|
+> > | `$x("`| This function tells the browser we want it to execute an XPath query. |
+> > | `//`| Look anywhere in the document... |
+> > | `h2`| ... for an h2 element ... |
+> > | `[@id = 'select-this-challenge-box']`| ... that has an `id` attribute set to `select-this-challenge-box`... |
+> > | `//`| and select the parent node of that h2 element |
+> > | `")"`| This is the end of the XPath query. |
+> > | `[0]`| Select the first element of the resulting array (since `$x()` returns an array of nodes and we are only interested in the first one).|
+> >
+> > By hovering on the object returned by your XPath query in the console, your browser should helpfully highlight
+> > that object in the document, enabling you to make sure you got the right one:
+> >
+> > ![Hovering over a resulting node in Firefox]({{ page.root }}/fig/firefox-hover.png)
+> {: .solution}
+{: .challenge}
 
-| Path Expression   | Expression Result |
-|-----------------|:-------------|
-|```catalog```|	Select all nodes with the name "catalog"|
-|```/catalog```|	Select the root element catalog. Note: If the path starts with a slash ( / ) it always represents an absolute path to an element! Your absolute path is the same as your context in this case.|
-|```//author```| Select all nodes with the name "author"|
-|```//author/..``` |Selects all of the parents of the nodes with the name "author"|
-|```/catalog/book/@id```|Select all book node id attributes|
-
-
-### Exercises
-
-Now you try XPath using a different context. In BaseX, if you go to the tree view and double-click on a book node, your context will start at that book node. From your current context:
-
-| Path Expression   | Expression Result |
-|-----------------|:-------------|
-|| Select the context book node|
-|| Select the context's parent node|
-|| Select the context's publish date value|
-|| Select the author node|
-
-Did you try /author? Why doesn't it work? How do you select the author node irregardless of context - the absolute path?
+# Advanced XPath syntax
 
 ## Operators
 
@@ -352,201 +472,6 @@ XPath Axes fuller syntax of how to use XPath. Provides all of the different ways
 |```/descendant::book```|Select all book element nodes|
 |```//attribute::lang```|Select all lang attribute nodes|
 
+# References
 
-
-# XQuery
-
-## Introduction
-
-XQuery is a language used to query XML data. Single files, collection of files, or databases.
-
-Below are a few examples of how XQuery can be used:
-
-* Querying XML data to return XML documents
-* Extracting and searching through XML data
-* Combining, grouping, sorting, aggregating XML data
-* Transforming XML documents into other XML, HTML or markup-based documents
-* Cleaning XML data
-* Publishing data from databases onto the web or in applications
-
-## Functions
-We've been using functions like contains, matches. For simplicity, BaseX hides the complete query but we were using the fn:doc function everytime we were querying a document!
-
-A function is an action or set of actions that you can reuse. In XPath/XQuery, a function takes in a parameter or set of parameters to bring back a new result.
-
-Functions on strings and numeric types, recognize dates and can do comparisons. For a list of functions, visit the [W3C Function specification.](https://www.w3.org/TR/xpath-functions/#func-replace)
-
-Some useful string functions:
-
-* fn:replace('query', 'input', 'replacementvalue') - can use regex with this function
-* fn:upper-case('query')
-* fn:lower-case('query')
-* fn:normalize-space('query')
-
-It's also possible to write your own reusable functions!
-
-## FLWOR statements
-
-XQuery statements are written with FLWOR clauses. If you are familiar with SQL, you structure your queries using clauses like SELECT, FROM, WHERE clauses and similarly can be used to join documents. In XQuery:
-
-`:=` indicates creation of a variable creation and variable assignment in one fell swoop
-
-**For** - the 'for' clause basically states: "for every item in a set of items, do something."
-
-The 'for' clause in XQuery iteratively assigns a variable to every item in a set of items selected using XPath.
-
-e.g. if you were to copy and paste this query into the Editor window:
-
-```
-for $titleitem in fn:doc("books.xml")/catalog/book/title
-return $titleitem
-```
-
-You would get all of the titles of each book back.
-
-**Let** - the 'let' clause basically declares a value without iteration. In XQuery, you assign a single result to a variable using let, which can be a single value, element or a whole set of elements. Your subsequent statements will act on an aggregate set of items.
-
-e.g.
-
-```
-let $cost := 300
-return $cost
-```
-
-e.g.
-
-```
-let $prices := fn:doc("books.xml")/catalog/book/price
-let $sum := sum($prices)
-return $sum
-```
-
-e.g.
-
-```
-for $author in fn:doc("books.xml")//author
-  let $secondname := $author//secondaryname
-return $secondname
-```
-
-**Where** - the 'where' clause is a boolean (true/false) statement that filters out nodes that do not satisfy this statement
-
-```
-for $author in fn:doc("books.xml")//author
-  let $secondname := $author//secondaryname
-  where $secondname[starts-with(.,"C")]
-return $secondname
-```
-
-**Order By** - the default order of the results of an XPath/XQuery expression is the document order. the 'order' clause will sort or group items together based on this expression
-
-e.g.
-```
-for $title in fn:doc("books.xml")/catalog/book/title
-order by $title descending
-return $title
-```
-
-**Return** - the 'return' clause will bring back specified the nodes
-
-You can use as many for and let statements as you want and in any order.
-
-
-### Exercises
-
-
-Generate a report of all Fantasy books alphabetically sorted by author
-
-```
-<report><title>Book Report Stats</title> {
-for $item in fn:doc("books.xml")/catalog/book
-let $author := $item/author/text()
-let $title := $item/title/text()
-where fn:contains($item/genre, "Fantasy")
-order by $title
-return<object><id>{$author}</id><title>{$title}</title></object> }</report>
-```
-
-## Querying Databases
-
-Up until now we've been querying single documents, but XPath and XQuery lets you query multiple documents using fn:collection("databasename") or in BaseX you can just use collection("databasename"). To specify a single document use fn:doc("file") or in a database in BaseX use db:open("database", "file").
-
-XPath example:
-```
-fn:collection("data-collection-plants")/CATALOG/PLANT/COMMON
-```
-
-## XQuery Update
-
-XQuery has an extension called [XQuery Update Facility](https://www.w3.org/TR/xquery-update-10/) that lets you directly modify the current XML document or database that you're working with.
-
-In SQL there is the UPDATE clause which is used to update records in a table. In XQuery, the XQuery Update Facility (XQUF) provides five basic operations acting upon XML nodes:
-
-* **insert node:** insert one or several nodes inside/after/before a specified node
-* **delete node:** delete one or several nodes
-* **replace node:** replace a node (and all its descendants if it is an element) by a sequence of nodes.
-* **replace value of node:** replace the contents (children) of a node with a sequence of nodes, or the value of a node with a string value.
-* **rename node:** rename a node (applicable to elements, attributes and processing instructions) without affecting its contents or attributes.
-
-BaseX has a [complete implementation](http://docs.basex.org/wiki/XQuery_Update) of the XQuery Update specification that you'll want to take a look at to structure your queries. When you run these queries, they are not automatically saved unless you do so yourself. Nevertheless, it is still important to back up your work!
-
-### Example
-
-Running
-
-```
-for $zonenode in collection(data-collection-plants)//ZONE
-return insert node $zonenode after $zonenode
-```
-
-Will find the nodes that match the xpath expression `//ZONE`, then insert an identical <ZONE /> node wherever that node occurs in the document.
-
-### Exercises
-
-* In `/data-menu-xquery`, clean up the prices so you can perform operations on those nodes as numeric values
-```
-for $text in db:open("data-menu-xquery","menuprices.xml")/breakfast_menu/food/price
-return replace value of node $text with fn:replace($text, "\$", "")
-```
-
-* Rename the AVAILABILITY node to SERIALNO in the entire plant database.
-
-```
-for $availability in fn:collection(data-collection-plants)//AVAILABILITY
-return rename node $availability as 'SERIALNO'
-```
-
-* Replace all occurrences of the word leaf with leaves in the entire plant database.
-
-```
-TRY IT OUT!
-```
-
-### Examples - bringing it all together
-
-
-
-### Non-updating functions
-
-There's also copy, modify, return. BaseX also has its own update function.
-
-# Reference
-
-## Setup
-
-[Install basex](http://basex.org/products/download/)
-
-Mac:
-[Install a JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-You need to install [homebrew](http://brew.sh/)
-Once that's installed, run
-```bash
-brew install basex
-```
-
-Windows: use installer
-Linux: use the distribution package
-
-In your terminal, run
-
-```$ basexgui```
+* [W3Schools: JavaScript HTML DOM Navigation](http://www.w3schools.com/js/js_htmldom_navigation.asp)
