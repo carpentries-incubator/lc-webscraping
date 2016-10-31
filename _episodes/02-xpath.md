@@ -1,13 +1,24 @@
 ---
 title: "Selecting content on a web page with XPath and XQuery"
-teaching: 20
-exercises: 10
+teaching: 30
+exercises: 15
 questions:
-- "Key question"
+- "How can I select a specific element on web page?"
+- "What is XPath and how can I use it?"
 objectives:
-- "First objective."
+- "Introduce XPath queries"
+- "Explain the structure of an XML or HTML document"
+- "Explain how to view the underlying HTML content of a web page in a browser"
+- "Explain how to run XPath queries in a browser"
+- "Introduce the XPath syntax"
+- "Use the XPath syntax to select elements on this web page"
 keypoints:
-- "First key point."
+- "XML and HTML are markup languages. They provide structure to documents."
+- "XML and HTML documents are made out of nodes, which form a hierarchy."
+- "The hierarchy of nodes inside a document is called the node tree."
+- "Relationships between nodes are: parent, child, sibling."
+- "XPath queries are constructed as paths going up or down the node tree."
+- "XPath queries can be run in the browser using the `$x()` function."
 ---
 Before we delve into web scraping proper, we will first spend some time introducing
 some of the techniques that are required to indicate exactly what should be
@@ -307,6 +318,8 @@ FIXME this probably needs an easier challenge to start with.
 {: .challenge}
 
 # Advanced XPath syntax
+
+FIXME: All the content below is from the original XPath lesson. Adapt content to use current example.
 
 ## Operators
 
