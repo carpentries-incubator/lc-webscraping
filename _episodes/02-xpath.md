@@ -1,5 +1,5 @@
 ---
-title: "Selecting content on a web page with XPath and XQuery"
+title: "Selecting content on a web page with XPath"
 teaching: 30
 exercises: 15
 questions:
@@ -132,7 +132,7 @@ been removed for clarity):
 <html lang="en">
   <head>
     (...)
-    <title>Webscraping with Python: Selecting content on a web page with XPath and XQuery</title>
+    <title>{{page.title}}</title>
   </head>
   <body>
 	 (...)
@@ -176,7 +176,7 @@ The syntax to run an XPath query within the JavaScript console is `$x("XPATH_QUE
 This should return something similar to
 
 ~~~
-<- Array [ #text "Webscraping with Python: Selecting content on a web page with XPath and XQuery" ]
+<- Array [ #text "{{page.title}}" ]
 ~~~
 {: .output}
 
