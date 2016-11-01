@@ -265,8 +265,68 @@ The most useful path expressions are listed below:
 |`text()`| Select the text content of a node|
 | &#124;|Pipe chains expressions and brings back results from either expression, think of a set union |
 
+
+For example, to select all the `blockquote` nodes of this page, we can write
+
+~~~
+$x("html/body/div/blockquote")
+~~~
+{: .source}
+
+This produces an array of objects:
+
+~~~
+<- Array [ <blockquote.objectives>, <blockquote.callout>, <blockquote.callout>, <blockquote.challenge>, <blockquote.callout>, <blockquote.callout>, <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, <blockquote.keypoints> ]
+~~~
+{: .output}
+
+This selects all the `blockquote` elements that are under `html/body/div`. If we want instead to select _all_
+`blockquote` elements in this document, we can use the `//` syntax instead:
+
+~~~
+$x("//blockquote")
+~~~
+{: .source}
+
+This produces a longer array of objects:
+
+~~~
+<- Array [ <blockquote.objectives>, <blockquote.callout>, <blockquote.callout>, <blockquote.challenge>, <blockquote.callout>, <blockquote.callout>, <blockquote.challenge>, <blockquote.solution>, <blockquote.challenge>, <blockquote.solution>, 3 more… ]
+~~~
+{: .output}
+
+> ## Why is the second array longer?
+> If you look closely into the array that is returned by the `$x("//blockquote")` query above,
+> you should see that it contains objects like `<blockquote.solution>` that were not
+> included in the results of the first query. Why is this so?
+>
+> Tip: Look at the source code and see how the challenges and solutions elements are
+> organised.
+>
+{: .challenge}
+
+We can use the `class` attribute of certain elements to filter down results. For example, looking
+at the list of `blockquote` elements returned by the previous query, and by looking at this page's
+source, we can see that the blockquote elements on this page are of different classes 
+(challenge, solution, callout, etc.).
+
+To refine the above query to get all the `blockquote` elements of the `challenge` class, we can type
+
+~~~
+$x("//blockquote[@class='challenge']")
+~~~
+{: .source}
+
+which returns
+
+~~~
+Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge> ]
+~~~
+{: .output}
+
+
 > ## Select the "Introduction" title by ID
-> In the previous challenge, we were able to select the "Introduction" title because we knew it was
+> In a previous challenge, we were able to select the "Introduction" title because we knew it was
 > the first `h1` element on the page. But what if we didn't know how many such elements were on the
 > page. In other words, is there a different attribute that allows us to uniquely identify that title
 > element?
@@ -299,10 +359,6 @@ The most useful path expressions are listed below:
 {: .challenge}
 
 
-We can use the above expressions to construct more complicated queries. For example, if we wanted to
-select the node tree image above, we could do the following:
-
-FIXME
 
 
 > ## Select this challenge box
@@ -551,6 +607,21 @@ XPath Axes fuller syntax of how to use XPath. Provides all of the different ways
 |-----------------|:-------------|
 |```/descendant::book```|Select all book element nodes|
 |```//attribute::lang```|Select all lang attribute nodes|
+
+Oftentimes, the elements we are looking for on a page have no ID attribute or
+other uniquely identifying features, so the next best thing is to aim for
+neighboring elements that we can identify more easily and then use node
+relationships to get from those easy to identify elements to the target elements.
+
+For example, the node tree image above has no uniquely identifying feature like an ID attribute.
+However, it is just below the section header "Navigating through the HTML node tree using XPath".
+Looking at the source code of the page, we see that that header is a `h2` element with the id
+`navigating-through-the-html-node-tree-using-xpath`.
+
+~~~
+$x("//h2[@id='navigating-through-the-html-node-tree-using-xpath']/following-sibling::p[2]/img")
+~~~
+{: .source}
 
 # References
 
