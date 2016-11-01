@@ -265,6 +265,7 @@ FIXME this probably needs an easier challenge to start with.
 > > ## Solution
 > > Let's have a look at the HTML code of this page, around this challenge box (using the "View Source" option)
 > > in our browser). The code looks something like this:
+> > 
 > > ~~~
 > > <!doctype html>
 > > <html lang="en">
