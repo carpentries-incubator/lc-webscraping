@@ -35,3 +35,7 @@ in the data.
 > and [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming).
 >
 {: .prereq}
+
+## Software requirements
+
+Refer to the [Setup](setup/) section to install the required software to follow along this lesson.
