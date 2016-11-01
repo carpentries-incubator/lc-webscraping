@@ -169,7 +169,7 @@ should display a _prompt_ with a `> ` character (`>>` in Firefox) inviting you t
 The syntax to run an XPath query within the JavaScript console is `$x("XPATH_QUERY")`, for example:
 
 ~~~
-> $x("/html/head/title/text()")
+$x("/html/head/title/text()")
 ~~~
 {: .source}
 
@@ -193,7 +193,32 @@ the _root_ of the document. With that query, we told the browser to
 | `title/`| ... then to the `title` node that's inside it... |
 | `text()`| and select the text node contained in that element |
 
-Using this syntax, XPath thus allows us to determine the exact _path_ to a node. Before we look into other
+Using this syntax, XPath thus allows us to determine the exact _path_ to a node. 
+
+> ## Select the "Introduction" title
+> Write an XPath query that selects the "Introduction" title above and try running it in the console.
+>
+> Tip: if a query returns multiple elements, the syntax `element[1]` can be used. Note that
+> XPath uses one-based indexing, therefore the first element has index 1, the second has index 2 etc.
+>
+> > ## Solution
+> > 
+> > ~~~
+> > $x("/html/body/div/h1[1]")
+> > ~~~
+> > {: .source}
+> >
+> > should produce something similar to
+> >
+> > ~~~
+> > <- Array [ <h1#introduction> ]
+> > ~~~
+> > {: .output}
+> >
+> {: .solution}
+{: .challenge}
+
+Before we look into other
 ways to reach a specific HTML node using XPath, let's start by looking closer at how nodes are arranged
 within a document and what their relationships with each others are.
 
@@ -240,13 +265,52 @@ The most useful path expressions are listed below:
 |`text()`| Select the text content of a node|
 | &#124;|Pipe chains expressions and brings back results from either expression, think of a set union |
 
-FIXME this probably needs an easier challenge to start with.
+> ## Select the "Introduction" title by ID
+> In the previous challenge, we were able to select the "Introduction" title because we knew it was
+> the first `h1` element on the page. But what if we didn't know how many such elements were on the
+> page. In other words, is there a different attribute that allows us to uniquely identify that title
+> element?
+>
+> Using the path expressions introduced above, rewrite your XPath query to select
+> the "Introduction" title without using the `[1]` index notation.
+>
+> Tips:
+> 
+> * Look at the source of the page or use the "Inspect element" function of your browser to see what
+>   other information would enable us to uniquely identify that element.
+> * The syntax for selecting an element like `<div id="mytarget">` is `div[@id = 'mytarget']`.
+>
+>
+> > ## Solution
+> > 
+> > ~~~
+> > $x("/html/body/div/h1[@id='introduction']")
+> > ~~~
+> > {: .source}
+> >
+> > should produce something similar to
+> >
+> > ~~~
+> > <- Array [ <h1#introduction> ]
+> > ~~~
+> > {: .output}
+> >
+> {: .solution}
+{: .challenge}
+
+
+We can use the above expressions to construct more complicated queries. For example, if we wanted to
+select the node tree image above, we could do the following:
+
+FIXME
+
 
 > ## Select this challenge box
 > Using an XPath query in the JavaScript console of your browser, select the element that contains the text
 > you are currently reading on this page.
 >
 > Tips: 
+> 
 > * In principle, `id` attributes in HTML are unique on a page. This means that if you know the `id`
 >   of the element you are looking for, you should be able to construct an XPath that looks for this value
 >   without having to worry about where in the node tree the target element is located.
@@ -255,7 +319,7 @@ FIXME this probably needs an easier challenge to start with.
 > * Use the `//` syntax to select for elements regardless of where they are in the tree.
 > * The syntax to select the parent element relative to a context node is `..`
 > * The `$x(...)` JavaScript syntax will always return an array of nodes, regardless of the number of
->   nodes returned by the query. Remembering that JavaScript uses _zero based indexing_, the syntax to get
+>   nodes returned by the query. Contrary to XPath, JavaScript uses _zero based indexing_, so the syntax to get
 >   the first element of that array is therefore `$x(...)[0]`.
 > 
 > Make sure you select this entire challenge box. If the result of your query displays only the title of
@@ -289,12 +353,14 @@ FIXME this probably needs an easier challenge to start with.
 > > 
 > > We know that the `id` attribute should be unique, so we can use this to select the `h2` element inside
 > > the challenge box:
+> >
 > > ~~~
 > > $x("//h2[@id = 'select-this-challenge-box']/..")[0]
 > > ~~~
 > > {: .source}
 > > 
 > > This should return something like
+> >
 > > ~~~
 > > <- <blockquote class="challenge">
 > > ~~~
