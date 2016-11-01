@@ -3,23 +3,40 @@ title: "Introduction: What is web scraping?"
 teaching: 10
 exercises: 0
 questions:
-- "Key question"
+- "What is web scraping and why is it useful?"
 objectives:
-- "First objective."
+- "Introduce the concept of structured data"
+- "Discuss how data can be extracted from web pages"
 keypoints:
-- "First key point."
+- "Humans are good at categorizing information, computers not so much."
+- "Often, data on a web site is not properly structured, making its extraction difficult."
+- "Web scraping is the process of automating the extraction of data from web sites."
 ---
 
-From Wikipedia:
-	"Web scraping (web harvesting or web data extraction) is a computer software technique of extracting information from websites."
+FIXME: introduction about data journalism, relies on ability to harvest data that is not always available in a form that allows for
+analysis, e.g. lists of members from a political party, etc.
 
-Closely related to web indexing (used by search engines like Google). They typically use tools called "bots" or "crawlers" to go through websites.
-Difference:
-	Indexing: going through ALL WEBSITES (unless blocked), store all content into database, follow ALL LINKS, index all stored data, repeat
-	Scraping: go through SPECIFIC WEBSITES, follow SPECIFIED LINKS, extract unstructured information and put it in STRUCTURED FORM
+In the next few examples, we will try to extract lists of politicians and their party affiliation from various
+constituencies.
 
-Example:
-http://www.parl.gc.ca/Parliamentarians/en/members
+Let's start by looking at the current list of members of the Canadian parliament, which is available
+on the [Pariliament of Canada website](http://www.parl.gc.ca/Parliamentarians/en/members).
+
+
+	Difference between UNSTRUCTURED and STRUCTURED data
+	
+	For humans, unstructured. We recognize names, provinces, political party, etc.
+	But a machine doesn't.
+	
+	Computers need LABELS.
+	This is a good website, because data is actually structured. 
+		View Source. DIVs
+		Export as XML/CSV. -> STRUCTURED DATA
+
+
+
+
+
 
 > ## Structured vs unstructured data
 >
@@ -37,15 +54,7 @@ http://www.parl.gc.ca/Parliamentarians/en/members
 
 
 
-	Difference between UNSTRUCTURED and STRUCTURED data
-	
-	For humans, unstructured. We recognize names, provinces, political party, etc.
-	But a machine doesn't.
-	
-	Computers need LABELS.
-	This is a good website, because data is actually structured. 
-		View Source. DIVs
-		Export as XML/CSV. -> STRUCTURED DATA
+
 
 Compare with
 https://www.parliament.uk/mps-lords-and-offices/mps/
@@ -55,7 +64,13 @@ https://www.parliament.uk/mps-lords-and-offices/mps/
 	But this data is not as nicely structured.
 		View Source. Table
 
+From Wikipedia:
+	"Web scraping (web harvesting or web data extraction) is a computer software technique of extracting information from websites."
 
+Closely related to web indexing (used by search engines like Google). They typically use tools called "bots" or "crawlers" to go through websites.
+Difference:
+	Indexing: going through ALL WEBSITES (unless blocked), store all content into database, follow ALL LINKS, index all stored data, repeat
+	Scraping: go through SPECIFIC WEBSITES, follow SPECIFIED LINKS, extract unstructured information and put it in STRUCTURED FORM
 
 
 
