@@ -256,4 +256,3 @@ Also works with XML, Pickle, etc.
 http://doc.scrapy.org/en/latest/topics/feed-exports.html#topics-feed-exports
 
 MAGIC!!
-
