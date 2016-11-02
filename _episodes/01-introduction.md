@@ -20,23 +20,49 @@ In the next few examples, we will try to extract lists of politicians and their 
 constituencies.
 
 Let's start by looking at the current list of members of the Canadian parliament, which is available
-on the [Pariliament of Canada website](http://www.parl.gc.ca/Parliamentarians/en/members).
+on the [Parliament of Canada website](http://www.parl.gc.ca/Parliamentarians/en/members).
 
+This is how this page appears in November 2016:
 
-	Difference between UNSTRUCTURED and STRUCTURED data
-	
-	For humans, unstructured. We recognize names, provinces, political party, etc.
-	But a machine doesn't.
-	
-	Computers need LABELS.
-	This is a good website, because data is actually structured. 
-		View Source. DIVs
-		Export as XML/CSV. -> STRUCTURED DATA
+![Screenshot of the Parliament of Canada website]({{ page.root }}/fig/canparl.png)
 
+There are several features (circled in the image above) that make the data on this page easier to work with.
+The search, reorder, refine features and display modes hint that the data is actually stored in a (structured)
+database before being displayed on this page. The data can be readily downloaded as a Comma-Separated Values (CSV)
+file or XML, which allows anyone to load this data in their own database, spreadsheet or computer program to
+reuse it.
 
+Even though the information displayed in the view above isn't labeled, a person visiting this site with some
+knowledge of Canadian geography and politics is quickly able to figure out what information pertains to the 
+name of the politicians, the geographical area or the political party they represent. This is because human
+beings are usually good at using context and prior knowledge to quickly categorize information.
 
+Computers, on the other hand, can't do this unless we provide them with more information.
+Fortunately, if we look at the source HTML code of this page, we see that the information displayed is actually
+organized inside labeled elements:
 
+~~~
+(...)
+<div>
+    <a href="/Parliamentarians/en/members/Ziad-Aboultaif(89156)"> 
+        <img alt="Photo - Ziad Aboultaif - Click to open the Member of Parliament profile" title="Photo - Ziad Aboultaif - Click to open the Member of Parliament profile" src="http://www.parl.gc.ca/Parliamentarians/Images/OfficialMPPhotos/42/AboultaifZiad_CPC.jpg" class="picture" />
+        <div class="full-name">
+		    <span class="honorific"><abbr></abbr></span>
+            <span class="first-name">Ziad</span>
+            <span class="last-name">Aboultaif</span>
+        </div>
+    </a>
+    <div class="caucus-banner" style="background-color:#002395"></div>
+    <div class="caucus">Conservative</div>
+    <div class="constituency">Edmonton Manning</div>
+    <div class="province">Alberta</div>        
+</div>
+(...)
+~~~
+{: .output}
 
+Thanks to these labels, we could relatively easily instruct a computer to look for all parliamentarians from
+Alberta and list their names and caucus information.
 
 > ## Structured vs unstructured data
 >
@@ -52,25 +78,63 @@ on the [Pariliament of Canada website](http://www.parl.gc.ca/Parliamentarians/en
 >
 {: .callout}
 
+Let's look now at the current list of members for the [UK House of Commons](https://www.parliament.uk/mps-lords-and-offices/mps/). 
 
+![Screenshot of the UK House of Commons website]({{ page.root }}/fig/ukparl.png)
 
+This page also displays a list of names, political and geographical affiliation. There is a search box and
+a filter option, but no obvious way to download this information and reuse it.
 
+Here is the code for this page:
 
-Compare with
-https://www.parliament.uk/mps-lords-and-offices/mps/
+~~~
+(...)
+<table>
+    <tbody>
+        (...)
+        <tr id="ctl00_ctl00_(...)_trItemRow" class="first">
+            <td>Aberavon</td>
+            <td id="ctl00_ctl00_(...)_tdNameCellRight">
+                <a id="ctl00_ctl00_(...)_hypName" href="http://www.parliament.uk/biographies/commons/stephen-kinnock/4359">Kinnock, Stephen</a>(Labour)
+            </td>
+        </tr>
+        (...)
+    </tbody>
+</table>
+(...)
+~~~
+{: .output}
 
-	As humans, we recognize names, parties, etc.
-	
-	But this data is not as nicely structured.
-		View Source. Table
+We see that this data has been structured for displaying purposes (it is arranged in rows inside
+a table) but the different elements of information are not clearly labeled.
 
-From Wikipedia:
-	"Web scraping (web harvesting or web data extraction) is a computer software technique of extracting information from websites."
+What if we wanted to download this dataset and, for example, compare it with the Canadian list of MPs
+to analyze gender representation, or the representation of political forces in the two groups?
+We could try copy-pasting the entire table into a spreadsheet or even manually
+copy-pasting the names and parties in another document, but this can quickly become impractical when
+faced with a large set of data. What if we wanted to collect this information for every country that
+has a parliamentary system?
 
-Closely related to web indexing (used by search engines like Google). They typically use tools called "bots" or "crawlers" to go through websites.
-Difference:
-	Indexing: going through ALL WEBSITES (unless blocked), store all content into database, follow ALL LINKS, index all stored data, repeat
-	Scraping: go through SPECIFIC WEBSITES, follow SPECIFIED LINKS, extract unstructured information and put it in STRUCTURED FORM
+Fortunately, there are tools to automate at least part of the process. This technique is called
+_web scraping_. 
 
+>
+> "Web scraping (web harvesting or web data extraction) is a computer software technique of 
+> extracting information from websites."
+> (Source: [Wikipedia](https://en.wikipedia.org/wiki/Web_scraping))
+>
 
+This technique is closely related to _web indexing_ which is what search engines like Google do
+to build the database that is queried when users are searching. The difference is that web indexing
+(using tools typically called "bots" or "crawlers") aims to visit _all_ web sites recursively,
+following all links (unless blocked), index all data and store the result in a database and repeat
+every so often to keep their index current.
+
+Web scraping, on the other hand, is a more focused technique, typically targeting one web site at a
+time to extract unstructured information and put it in a structured form for reuse.
+
+In this lesson, we will continue exploring the examples above and try different techniques to extract
+the information they contain. But before we launch into web scraping proper, we need to look
+a bit closer at how information is organized in an HTML document and how to build queries to access
+a specific subset of that information.
 
