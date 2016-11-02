@@ -1,7 +1,7 @@
 ---
-title: "Manually scrape data using browser extensions"
-teaching: 20
-exercises: 10
+title: "IN DEVELOPMENT: Manually scrape data using browser extensions"
+teaching: 45
+exercises: 20
 questions:
 - "Key question"
 objectives:

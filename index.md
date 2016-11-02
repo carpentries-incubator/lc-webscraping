@@ -39,3 +39,11 @@ in the data.
 ## Software requirements
 
 Refer to the [Setup](setup/) section to install the required software to follow along this lesson.
+
+> ## Under development
+>
+> Please note that the contents of this lesson are still being actively developed. Any feedback is
+> appreciated, please do not hesitate to contact [the author](mailto:tom@timtom.ch) or contribute
+> to the lesson by [forking it on GitHub](https://github.com/timtomch/library-webscraping/).
+>
+{: .callout}
