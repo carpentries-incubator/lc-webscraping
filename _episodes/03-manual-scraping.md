@@ -241,7 +241,7 @@ So let's try changing the Selector XPath in Scraper to
 and hit "Scrape". We get something that is closer to what we want, with one line per MP, but
 the addresses are still all in one block of unstructured text:
 
-![Screenshot of the Scraper window trying to scrape addresses]({{ page.root }}/fig/scraper-canparl-02.png)
+![Screenshot of the Scraper window trying to scrape addresses]({{ page.root }}/fig/scraper-canparl-03.png)
 
 Looking closer at the HTML source, we see that name and addresses are separated by `li` elements
 within those `ul` elements. So let's add a few columns based on those elements:
@@ -255,7 +255,7 @@ within those `ul` elements. So let's add a few columns based on those elements:
 
 This produces the following result:
 
-![Screenshot of the Scraper window scraping addresses]({{ page.root }}/fig/scraper-canparl-03.png)
+![Screenshot of the Scraper window scraping addresses]({{ page.root }}/fig/scraper-canparl-04.png)
 
 The addresses are still one big block of text each, but at least we now have a table for all MPs
 and the addresses are separated.
@@ -275,7 +275,7 @@ and the addresses are separated.
 > > ~~~
 > > {: .source}
 > >
-> > ![Screenshot of the Scraper window on scraping MP phone numbers]({{ page.root }}/fig/scraper-canparl-04.png)
+> > ![Screenshot of the Scraper window on scraping MP phone numbers]({{ page.root }}/fig/scraper-canparl-05.png)
 > >
 > {: .solution}
 {: .challenge}
