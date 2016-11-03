@@ -358,17 +358,16 @@ Let's create a second import.io scraper using that URL
 
 Select the data we are interested in. Say, the email address, the current title, the political party.
 
-![Selecting data to scrape on import.io]({{ page.root }}/fig/importio-ontparl-04.png)
 
 Might work for one, what about others? Can we be sure the data is at the same place?
 	
 Let's try it out. import.io allows us to run a scraper on multiple URLs. Let's put 2-3 in that box.
 	
-	Run, preview.
+Run, preview.
 	
-	We see that some data has not been captured correctly.
+We see that some data has not been captured correctly.
 	
-	Let's investigate.
+Let's investigate.
 	
 Show source / inspect. Use XPath to query elements
 
@@ -379,6 +378,8 @@ $x("//div[@class='mppcontact']//div[@class='email']")
 ~~~
 {: .source}
 
+![Selecting data to scrape on import.io]({{ page.root }}/fig/importio-ontparl-04.png)
+
 Party:
 
 It's actually after the second H2 element.
@@ -387,6 +388,8 @@ It's actually after the second H2 element.
 $x("//div[@class='mppinfoblock']/h2[2]/following-sibling::p")
 ~~~
 {: .source}
+
+![Selecting data to scrape on import.io]({{ page.root }}/fig/importio-ontparl-05.png)
 
 Try it out on multiple URLs. Once we are confident, we can chain scrapers.
 
