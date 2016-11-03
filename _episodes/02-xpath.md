@@ -623,6 +623,8 @@ $x("//h2[@id='navigating-through-the-html-node-tree-using-xpath']/following-sibl
 ~~~
 {: .source}
 
+FIXME: add more XPath functions such as concat() and normalize-space() as well as a link to a good reference.
+
 # References
 
 * [W3Schools: JavaScript HTML DOM Navigation](http://www.w3schools.com/js/js_htmldom_navigation.asp)
