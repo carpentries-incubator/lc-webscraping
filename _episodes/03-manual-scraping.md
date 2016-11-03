@@ -3,11 +3,23 @@ title: "IN DEVELOPMENT: Manually scrape data using browser extensions"
 teaching: 45
 exercises: 20
 questions:
-- "Key question"
+- "How can I get started scraping data off the web?"
+- "How can I use XPath to more accurately select what data to scrape?"
+- "How can use the results of one scraper (e.g. a list of URLs) as input for a second one?"
 objectives:
-- "First objective."
+- "Introduce the Chrome Scraper extension."
+- "Practice scraping data that is well structured."
+- "Use XPath queries to refine what needs to be scraped when data is less structured."
+- "Introduce the import.io web service."
+- "Use import.io to chain scrapers."
+- "Schedule scrapers to run automatically"
 keypoints:
-- "First key point."
+- "Data that is relatively well structured (in a table) is relatively easily to scrape."
+- "More often than not, web scraping tools need to be told what to scrape."
+- "XPath can be used to define what information to scrape, and how to structure it."
+- "More advanced data cleaning operations are best done in a subsequent step."
+- "It is possible to use a list of URLs scraped from one page to scrape data on each of the URLs."
+- "Web-based scrapers such as import.io allow scrapes to be scheduled."
 ---
 
 # Using the Scraper Chrome extension
