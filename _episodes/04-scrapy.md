@@ -47,7 +47,7 @@ comes with a set of scripts to setup a new project and to control the scrapers t
 It also means that Scrapy doesn't work on its own. It requires a working Python installation
 (Python 2.7 and higher or 3.4 and higher - it should work in both Python 2 and 3), and a series of
 libraries to work. If you haven't installed Python or Scrapy on your machine, you can refer to the 
-[setup instructions](setup/). If you install Scrapy as suggested there, it should take care to install all
+[setup instructions](/setup). If you install Scrapy as suggested there, it should take care to install all
 required libraries as well.
 
 You can verify that you have the latest version of Scrapy installed by typing
@@ -307,50 +307,108 @@ Current MPPs</title>
 
 ## Define which elements to scrape using XPath
 
+Now that we know how to access the content of the [web page with the list of all Ontario MPPs](http://www.ontla.on.ca/web/members/members_current.do?locale=en),
+the next step is to extract the information we are interested in, in that case the URLs pointing
+to the detail pages for each politician.
 
-FIXME starts here
-	
-
-OK, so how do we now access the URLs we're interested in?
-Let's start by going back to the website and use the Inspect tool to find the elements we're looking for.
-
-We need to use "Selectors" to get to the elements we need. Scrapy uses XPath (or CSS) selectors for this.
-
-Refresher:
-Here are some examples of XPath expressions and their meanings:
-- /html/head/title: selects the <title> element, inside the <head> element of an HTML document
-- /html/head/title/text(): selects the text inside the aforementioned <title> element.
-- //td: selects all the <td> elements
-- //div[@class="mine"]: selects all div elements which contain an attribute class="mine"
-
-
-In Chrome, we can use the console to try out XPath queries:
+Using the techniques we have [learned earlier](/02-xpath), we can start by looking at
+the source code for our [target page](http://www.ontla.on.ca/web/members/members_current.do?locale=en)
+by using either the "View Source" or "Inspect" functions of our browser.
+Here is an excerpt of that page:
 
 ~~~
-> $x("//*[@class='mppcell']")
+(...)
+<div class="tablebody">
+	<table>
+		<tr class="oddrow" id="MemberID7085">
+			<td class="mppcell" >
+				<a href="members_detail.do?locale=en&amp;ID=7085">
+					Albanese, Hon Laura&nbsp;
+				</a>
+			</td>
+			<td class="ridingcell" >
+				York South&#8212;Weston&nbsp;
+			</td>
+		</tr>
+		<tr class="evenrow" id="MemberID7275">
+			<td class="mppcell" >
+				<a href="members_detail.do?locale=en&amp;ID=7275">
+					Anderson, Granville&nbsp;
+				</a>
+			</td>
+			<td class="ridingcell" >
+				Durham&nbsp;
+			</td>
+		</tr>
+		(...)
+	</table>
+</div>
+(...)
+~~~
+{: .output}
+
+There are different strategies to target the data we are interested in. One of them is to identify
+that the URLs are inside `td` elements of the class `mppcell`.
+
+We recall that the XPath syntax to access all such elements is `//td[@class='mppcell']`, which we can
+try out in the browser console:
+
+~~~
+> $x("//td[@class='mppcell']")
 ~~~
 {: .source}
 
-	This actually only works if there is only one class. More general answer:
-	https://stackoverflow.com/questions/8808921/selecting-a-css-class-with-xpath
+> ## Selecting elements assigned to multiple classes
+>
+> The above XPath works in this case because the target `td` elements are only assigned to the
+> `mppcell` class. It wouldn't work if those elements had more than one class, for example
+> `<td class="mppcell sampleclass">`. The more general syntax to select elements that belong to 
+> the `mppcell` class and potentially other classes as well is 
+> 
+> ~~~
+> `//*[contains(concat(" ", normalize-space(@class), " "), " mppcell ")]`
+> ~~~
+> {: .source}
+>
+> This [comment on StackOverflow](http://stackoverflow.com/a/9133579) has more details on
+> this issue.
+>
+{: .discussion}
 
-
-Drilling down:
+Once we were able to confirm that we are targeting the right cells, we can expand our XPath query
+to only select the `href` attribute of the URL:
 
 ~~~
-> $x("//*[@class='mppcell']/a/@href")
+> $x("//td[@class='mppcell']/a/@href")
 ~~~
 {: .source}
 
-Once we found what we're looking for, let's edit the Spider accordingly:
+This returns an array of objects:
 
-Scrapy Selectors support different methods:
-- xpath(): returns a list of selectors, each of which represents the nodes selected by the xpath expression given as argument.
-		This is what we'll use
-- css(): returns a list of selectors, each of which represents the nodes selected by the CSS expression given as argument.
-- extract(): returns a unicode string with the selected data.
-- re(): returns a list of unicode strings extracted by applying the regular expression given as argument.
+~~~
+<- Array [ href="members_detail.do?locale=en&amp;ID=7085", href="members_detail.do?locale=en&amp;ID=7275", 103 more… ]
+~~~
+{: .output}
 
+Looking at this result and at the source code of the page, we realize that the URLs are all
+_relative_ to that page. They are all missing part of the URL to become _absolute_ URLs, which
+we will need if we want to ask our spider to visit those URLs to scrape more data. We will therefore
+need to append `http://www.ontla.on.ca/web/members/` to all of those ULRs before we can use them.
+
+
+Armed with the correct query, we can now update our spider accordingly. The `parse`
+methods returns the contents of the scraped page inside the `response` object. That response
+objects supports a variety of methods to act on its contents:
+
+|Method|Description|
+|-----------------|:-------------|
+|`xpath()`| Returns a list of objects, each of which contains the nodes selected by the XPath query given as argument|
+|`css()`| Works similarly to the `xpath()` method, but uses CSS expressions to select elements.|
+|`extract()`| Returns the entire text content of the response object, as a unicode string.|
+|`re()`| Returns a list of unicode strings extracted by applying the regular expression given as argument.|
+
+Since we have an XPath query we know will extract the URLs we are looking for, we can now use
+the `xpath()` method and update the spider accordingly:
 
 ~~~
 import scrapy
@@ -371,12 +429,21 @@ class MPPSpider(scrapy.Spider):
 ~~~
 {: .source}
 
+Note also the following additional changes:
+* Since `response.xpath(...)` will return more than one object (as many as there are URLs on the page),
+  we are using a `for` construct to loop through all of them.
+* We use the `extract()` method on the returned objects to extract their text content
+* As we saw earlier, the URLs extracted from the page are all relative. We must therefore append
+  `http://www.ontla.on.ca/web/members/` to all of them to make them absolute.
 
+We can now run our new spider:
 
 ~~~
 scrapy crawl getemails
 ~~~
 {: .source}
+
+which produces a result similar to:
 
 ~~~
 2016-11-07 22:55:19 [scrapy] INFO: Scrapy 1.2.0 started (bot: ontariompps)
@@ -389,6 +456,8 @@ http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=2148
 2016-11-07 22:55:20 [scrapy] INFO: Spider closed (finished)
 ~~~
 {: .output}
+
+## Recursive scraping
 
 
 Looking good.
