@@ -251,6 +251,8 @@ to the console using the `print()` function.
 Dumping data on the console's standard output is not very practical, however, so we can modify our
 script to have the resulted data be stored in a file:
 
+(editing `ontariompps/ontariompps/spiders/firstspider.py`)
+
 ~~~
 import scrapy
 
@@ -412,6 +414,8 @@ objects supports a variety of methods to act on its contents:
 Since we have an XPath query we know will extract the URLs we are looking for, we can now use
 the `xpath()` method and update the spider accordingly:
 
+(editing `ontariompps/ontariompps/spiders/firstspider.py`)
+
 ~~~
 import scrapy
 
@@ -543,6 +547,8 @@ in writing more precise queries to make sure we are collecting the right informa
 
 FIXME: describe this step in more detail
 
+(editing `ontariompps/ontariompps/spiders/firstspider.py`)
+
 ~~~
 import scrapy
 
@@ -594,7 +600,9 @@ class OntariomppsItem(scrapy.Item):
 ~~~
 {: .source}
 
-Then edit the spider accordingly
+Then edit the spider accordingly:
+
+(editing `ontariompps/ontariompps/spiders/firstspider.py`)
 
 ~~~
 import scrapy
