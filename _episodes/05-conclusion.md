@@ -96,7 +96,7 @@ be fine.
    hold the right to share is illegal.
 5. __Share what you can.__ If the data you scraped is in the public domain or you got
    permission to share it, then put it out there for other people to reuse it (e.g. on 
-   [datahub.io](https://datahub,io)). If you
+   [datahub.io](https://datahub.io)). If you
    wrote a web scraper to access it, share its code (e.g. on GitHub) so that others can
    benefit from it.
 6. __Don't break the Internet.__ Not all web sites are designed to withstand thousands of
