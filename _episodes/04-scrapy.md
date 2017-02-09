@@ -48,8 +48,8 @@ comes with a set of scripts to setup a new project and to control the scrapers t
 
 It also means that Scrapy doesn't work on its own. It requires a working Python installation
 (Python 2.7 and higher or 3.4 and higher - it should work in both Python 2 and 3), and a series of
-libraries to work. If you haven't installed Python or Scrapy on your machine, you can refer to the 
-[setup instructions](/setup). If you install Scrapy as suggested there, it should take care to install all
+libraries to work. If you haven't installed Python or Scrapy on your machine, you can refer to the
+[setup instructions](/library-webscraping/setup). If you install Scrapy as suggested there, it should take care to install all
 required libraries as well.
 
 You can verify that you have the latest version of Scrapy installed by typing
@@ -59,20 +59,19 @@ scrapy version
 ~~~
 {: .source}
 
-in a shell. If all is good, you should get the following back:
+in a shell. If all is good, you should get the following back (as of February 2017):
 
 ~~~
-Scrapy 1.2.0
+Scrapy 1.3.1
 ~~~
 {: .output}
 
-Scrapy version 1.2.0 is the most current at the time of writing this lesson. If you have a newer version,
-you should be fine as well.
+If you have a newer version, you should be fine as well.
 
 To introduce the use of Scrapy, we will reuse the same example we used with import.io in the previous
 section. We will start by scraping a list of URLs from [the list of members of the Ontario Legislative
 Assembly](http://www.ontla.on.ca/web/members/members_current.do?locale=en) and then visit those URLs to
-scrape [detailed information](http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085) 
+scrape [detailed information](http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085)
 about those ministers.
 
 ## Setup a new Scrapy project
@@ -185,19 +184,20 @@ Their general structure is as follows:
 * A method called `parse` in which we will write what data the spider should be looking for on the pages
   it visits, what links to follow and how to parse found data.
 
-Let's start with an example. Using our favourite text editor, let's create a file called `firstspider.py` 
+Let's start with an example. Using our favourite text editor, let's create a file called `firstspider.py`
 inside the `ontariompps/ontariompps/spiders` directory with the following contents:
 
 ~~~
 import scrapy
 
-class MPPSpider(scrapy.Spider):
+class MPPSpider(scrapy.Spider):	# The scrapy API provides us with a guideline of how to define a Spider class. Here, we are creating a class called MPPSpider, and are indicating it is a Spider class by in brackets using scrapy.Spider. A Spider class will define how a certain site (or a group of sites) will be scraped, including how to perform the crawl (i.e. follow links) and how to extract structured data from their pages (i.e. scraping items). In other words, Spiders are the place where you define the custom behaviour for crawling and parsing pages for a particular site (or, in some cases, a group of sites).
+
 	name = "firstspider"	# The name of this spider
-	
+
 	# The allowed domain and the URLs where the spider should start crawling:
 	allowed_domains = ["www.ontla.on.ca"]
 	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-	
+
 	def parse(self, response):
 		# The main method of the spider. The content of the scraped URL is passed on
 		# as the response object:
@@ -258,11 +258,11 @@ import scrapy
 
 class MPPSpider(scrapy.Spider):
 	name = "firstspider"	# The name of this spider
-	
+
 	# The allowed domain and the URLs where the spider should start crawling:
 	allowed_domains = ["www.ontla.on.ca"]
 	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-	
+
 	def parse(self, response):
 		with open("test.html", 'wb') as file:
 			file.write(response.body)
@@ -366,9 +366,9 @@ try out in the browser console:
 >
 > The above XPath works in this case because the target `td` elements are only assigned to the
 > `mppcell` class. It wouldn't work if those elements had more than one class, for example
-> `<td class="mppcell sampleclass">`. The more general syntax to select elements that belong to 
-> the `mppcell` class and potentially other classes as well is 
-> 
+> `<td class="mppcell sampleclass">`. The more general syntax to select elements that belong to
+> the `mppcell` class and potentially other classes as well is
+>
 > ~~~
 > `//*[contains(concat(" ", normalize-space(@class), " "), " mppcell ")]`
 > ~~~
@@ -421,11 +421,11 @@ import scrapy
 
 class MPPSpider(scrapy.Spider):
 	name = "getemails"	# The name of this spider
-	
+
 	# The allowed domain and the URLs where the spider should start crawling:
 	allowed_domains = ["www.ontla.on.ca"]
 	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-	
+
 	def parse(self, response):
 		# The main method of the spider. The content of the scraped URL is passed on
 		# as the response object:
@@ -489,7 +489,7 @@ in writing more precise queries to make sure we are collecting the right informa
 > consistent results.
 >
 > Tips:
-> 
+>
 > * Look at the source code and try out XPath queries in the console until you find what
 >   you are looking for.
 > * The syntax for selecting an element like `<div class="mytarget">` is `div[@class = 'mytarget']`.
@@ -497,20 +497,20 @@ in writing more precise queries to make sure we are collecting the right informa
 >   is `element/@attribute`.
 >
 > > ## Solution
-> > 
+> >
 > > This returns an array of phone (and fax) numbers:
-> > 
+> >
 > > ~~~
 > > > $x("//div[@class='phone']/text()")
 > > ~~~
 > > {: .source}
 > >
 > > And this returns an array of email addresses:
-> > 
+> >
 > > ~~~
 > > > $x("//div[@class='email']/a/text()")
 > > ~~~
-> > {: .source}> > 
+> > {: .source}> >
 > >
 > {: .solution}
 {: .challenge}
@@ -532,10 +532,10 @@ in writing more precise queries to make sure we are collecting the right informa
 > ~~~
 > In [1]: response.xpath("//div[@class='email']/a/text()").extract()
 > Out[1]: ['\nlalbanese.mpp@liberal.ola.org\n', '\nlalbanese.mpp.co@liberal.ola.org\n']
-> 
+>
 > In [2]: response.xpath("//div[@class='email']/a/text()").extract()[0]
 > Out[2]: '\nlalbanese.mpp@liberal.ola.org\n'
-> 
+>
 > In [3]: response.xpath("normalize-space(//div[@class='email']/a/text())").extract()[0]
 > Out[3]: 'lalbanese.mpp@liberal.ola.org'
 > ~~~
@@ -554,18 +554,18 @@ import scrapy
 
 class MPPSpider(scrapy.Spider):
 	name = "getemails"	# The name of this spider
-	
+
 	# The allowed domain and the URLs where the spider should start crawling:
 	allowed_domains = ["www.ontla.on.ca"]
 	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-	
+
 	def parse(self, response):
 		# The main method of the spider. The content of the scraped URL is passed on
 		# as the response object:
 		for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
 		    url = 'http://www.ontla.on.ca/web/members/' + url
 		    yield scrapy.Request(url, callback=self.get_details)
-		    
+
 	def get_details(self, response):
 	    name_detail = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract()[0]
 	    phone_detail = response.xpath("normalize-space(//div[@class='phone']/text())").extract()[0]
@@ -583,11 +583,11 @@ Also: return implies that the function is returning control of execution to the 
 FIXME: add more details here
 
 This is where the data extracted will be stored. Items work like Python dictionaries.
-	
+
 Edit `ontariompps/ontariompps/items.py`
-	
+
 (You will see Scrapy has pre-populated this file)
-	
+
 ~~~
 import scrapy
 
@@ -610,18 +610,18 @@ from ontariompps.items import OntariomppsItem # We need this so that Python know
 
 class MPPSpider(scrapy.Spider):
 	name = "getemails"	# The name of this spider
-	
+
 	# The allowed domain and the URLs where the spider should start crawling:
 	allowed_domains = ["www.ontla.on.ca"]
 	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-	
+
 	def parse(self, response):
 		# The main method of the spider. The content of the scraped URL is passed on
 		# as the response object:
 		for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
 		    url = 'http://www.ontla.on.ca/web/members/' + url
 		    yield scrapy.Request(url, callback=self.get_details) # callback to get_details
-		    
+
 	def get_details(self, response):
 	    item = OntariomppsItem() # Defining a new Item object
 	    item['name'] = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract()[0]
