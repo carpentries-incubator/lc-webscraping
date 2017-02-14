@@ -35,12 +35,12 @@ XPath can also be used in documents with a structure that is similar to XML, lik
 
 ## Markup Languages
 XML and HTML are _markup languages_. This means that they use a set of tags or rules to organise and provide
-information about the data they contain. This structure helps to automate processing, editing, formatting, 
+information about the data they contain. This structure helps to automate processing, editing, formatting,
 displaying, printing, etc. that information.
 
 XML documents stores data in plain text format. This provides a software- and hardware-independent way of storing,
 transporting, and sharing data. XML format is an open format, meant to be software agnostic. You can
-open an XML document in any text editor and the data it contains will be shown as it is meant to be represented. 
+open an XML document in any text editor and the data it contains will be shown as it is meant to be represented.
 This allows for exchange between incompatible systems and easier conversion of data.
 
 
@@ -48,7 +48,7 @@ This allows for exchange between incompatible systems and easier conversion of d
 >
 > Note that HTML and XML have a very similar structure, which is why XPath can be used almost interchangeably to
 > navigate both HTML and XML documents. In fact, starting with HTML5, HTML documents are fully-formed XML documents.
-> In a sense, HTML is like a particular dialect of XML. 
+> In a sense, HTML is like a particular dialect of XML.
 >
 {: .callout}
 
@@ -83,7 +83,7 @@ XPath is typically used to select and compare nodes, not edit them. To manipulat
 as XQuery would be used instead.
 
 > ## XPath assumes _structured_ data
-> 
+>
 > We can think of using XPath as similar to search a library catalogue using the advanced search function.
 > In a catalogue, we can take advantage of the fact that bibliographic information has been properly structured
 > in the database by specifying which metadata fields we want to query. For example, if we are looking for books
@@ -145,7 +145,7 @@ We can see from the source code that the title of this page is in a `title` elem
 `head` element, which is itself inside an `html` element that contains the entire content of the page.
 
 Say we wanted to tell a web scraper to look for the title of this page, we would use this information to indicate the
-_path_ the scraper would need to follow at it navigates through the HTML content of the page to reach the `title` 
+_path_ the scraper would need to follow at it navigates through the HTML content of the page to reach the `title`
 element. XPath allows us to do that.
 
 We can run XPath queries directly from within all major modern browsers, by enabling the built-in JavaScript console.
@@ -184,7 +184,7 @@ The output can vary slightly based on the browser you are using. For example in 
 return object by clicking on it in order to view its contents.
 
 Let's look closer at the XPath query used in the example above: `/html/head/title/text()`. The first `/` indicates
-the _root_ of the document. With that query, we told the browser to 
+the _root_ of the document. With that query, we told the browser to
 
 |-----------------|:-------------|
 | `/`| Start at the root of the document... |
@@ -193,7 +193,7 @@ the _root_ of the document. With that query, we told the browser to
 | `title/`| ... then to the `title` node that's inside it... |
 | `text()`| and select the text node contained in that element |
 
-Using this syntax, XPath thus allows us to determine the exact _path_ to a node. 
+Using this syntax, XPath thus allows us to determine the exact _path_ to a node.
 
 > ## Select the "Introduction" title
 > Write an XPath query that selects the "Introduction" title above and try running it in the console.
@@ -202,7 +202,7 @@ Using this syntax, XPath thus allows us to determine the exact _path_ to a node.
 > XPath uses one-based indexing, therefore the first element has index 1, the second has index 2 etc.
 >
 > > ## Solution
-> > 
+> >
 > > ~~~
 > > $x("/html/body/div/h1[1]")
 > > ~~~
@@ -307,7 +307,7 @@ This produces a longer array of objects:
 
 We can use the `class` attribute of certain elements to filter down results. For example, looking
 at the list of `blockquote` elements returned by the previous query, and by looking at this page's
-source, we can see that the blockquote elements on this page are of different classes 
+source, we can see that the blockquote elements on this page are of different classes
 (challenge, solution, callout, etc.).
 
 To refine the above query to get all the `blockquote` elements of the `challenge` class, we can type
@@ -335,14 +335,14 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > the "Introduction" title without using the `[1]` index notation.
 >
 > Tips:
-> 
+>
 > * Look at the source of the page or use the "Inspect element" function of your browser to see what
 >   other information would enable us to uniquely identify that element.
 > * The syntax for selecting an element like `<div id="mytarget">` is `div[@id = 'mytarget']`.
 >
 >
 > > ## Solution
-> > 
+> >
 > > ~~~
 > > $x("/html/body/div/h1[@id='introduction']")
 > > ~~~
@@ -365,8 +365,8 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > Using an XPath query in the JavaScript console of your browser, select the element that contains the text
 > you are currently reading on this page.
 >
-> Tips: 
-> 
+> Tips:
+>
 > * In principle, `id` attributes in HTML are unique on a page. This means that if you know the `id`
 >   of the element you are looking for, you should be able to construct an XPath that looks for this value
 >   without having to worry about where in the node tree the target element is located.
@@ -377,7 +377,7 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > * The `$x(...)` JavaScript syntax will always return an array of nodes, regardless of the number of
 >   nodes returned by the query. Contrary to XPath, JavaScript uses _zero based indexing_, so the syntax to get
 >   the first element of that array is therefore `$x(...)[0]`.
-> 
+>
 > Make sure you select this entire challenge box. If the result of your query displays only the title of
 > this box, have a second look at the HTML structure of the document and try to figure out how to "expand"
 > your selection to the entire challenge box.
@@ -385,7 +385,7 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > > ## Solution
 > > Let's have a look at the HTML code of this page, around this challenge box (using the "View Source" option)
 > > in our browser). The code looks something like this:
-> > 
+> >
 > > ~~~
 > > <!doctype html>
 > > <html lang="en">
@@ -406,7 +406,7 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > > </html>
 > > ~~~
 > > {: .output}
-> > 
+> >
 > > We know that the `id` attribute should be unique, so we can use this to select the `h2` element inside
 > > the challenge box:
 > >
@@ -414,14 +414,14 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > > $x("//h2[@id = 'select-this-challenge-box']/..")[0]
 > > ~~~
 > > {: .source}
-> > 
+> >
 > > This should return something like
 > >
 > > ~~~
 > > <- <blockquote class="challenge">
 > > ~~~
 > > {: .output}
-> > 
+> >
 > > Let's walk through that syntax:
 > >
 > > |-----------------|:-------------|
@@ -628,3 +628,4 @@ FIXME: add more XPath functions such as concat() and normalize-space() as well a
 # References
 
 * [W3Schools: JavaScript HTML DOM Navigation](http://www.w3schools.com/js/js_htmldom_navigation.asp)
+* [Cheatsheet](/library-webscraping/_extras/xpath-cheatsheet)

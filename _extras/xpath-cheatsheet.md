@@ -71,7 +71,7 @@ XPath Axes fuller syntax of how to use XPath. Provides all of the different ways
 * following ‐‐ all following nodes in the document, excluding descendants
 * preceding ‐‐ all preceding nodes in the document, excluding ancestors • attribute ‐‐ the attributes of the context node
 
-[![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days](http://ptgmedia.pearsoncmg.com/images/chap3_0672323184/elementLinks/03fig05.jpg)](http://ptgmedia.pearsoncmg.com/images/chap3_0672323184/elementLinks/03fig05.jpg) 
+[![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days](http://ptgmedia.pearsoncmg.com/images/chap3_0672323184/elementLinks/03fig05.jpg)]({{ page.root }}/fig/xpath-axes.jpg)
 
 ### XPath in Chrome
 View > Developer > Javascript Console. In the Console type in:
@@ -169,7 +169,7 @@ HTML View
 ```
 
 DOM Tree View
-[![this](http://i.imgur.com/7CW8svC.png)](http://i.imgur.com/7CW8svC.png)
+[![this]({{ page.root }}/fig/xpath-treeview.png)](http://i.imgur.com/7CW8svC.png)
 
 | Path Expression   | Expression Result |
 |-----------------|:-------------|
