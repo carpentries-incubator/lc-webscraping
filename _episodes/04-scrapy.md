@@ -227,13 +227,15 @@ class MPPSpider(scrapy.Spider):	# We are creating a class called MPPSpider
 > defined by Scrapy (hence the `scrapy.Spider` syntax). We are __extending__ the default `Spider` class by defining
 > the `name`, `allowed_domains` and `start_urls` attributes, as well as the `parse()` method.
 >
+{: .discussion}
+
 > A `Spider` class will define how a certain site (or a group of sites, defined in `start_urls`) will be scraped,
 > including how to perform the crawl (i.e. follow links) and how to extract structured data from their pages
 > (i.e. scraping items) in the `parse()` method.
 > In other words, Spiders are the place where we define the custom behaviour for crawling and parsing
 > pages for a particular site (or, in some cases, a group of sites).
 >
-{: .discussion}
+{: .callout}
 
 Once this file has been saved, we can try running it. First, let's move back to the project's
 top level directory (where the `scrapy.cfg` file is) and then type
