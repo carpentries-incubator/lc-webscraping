@@ -15,6 +15,7 @@ FIXME: this section needs more challenges
 
 ## Recap
 Here is what we have learned so far:
+
 * We can use XPath queries to select what elements on a page to scrape.
 * We can look at the HTML source code of a page to find how target elements are structured and
   how to select them.
@@ -152,10 +153,10 @@ __pycache__	pipelines.py	spiders/
 To recap, here is the structure that `scrapy startproject` created:
 
 ~~~
-cancolleges/			# the root project directory
+ontariompps/			# the root project directory
 	scrapy.cfg		# deploy configuration file
 
-	cancolleges/		# project's Python module, you'll import your code from here
+	ontariompps/		# project's Python module, you'll import your code from here
 		__init__.py
 
 		items.py		# project items file
@@ -190,7 +191,7 @@ inside the `ontariompps/ontariompps/spiders` directory with the following conten
 ~~~
 import scrapy
 
-class MPPSpider(scrapy.Spider):	# The scrapy API provides us with a guideline of how to define a Spider class. Here, we are creating a class called MPPSpider, and are indicating it is a Spider class by in brackets using scrapy.Spider. A Spider class will define how a certain site (or a group of sites) will be scraped, including how to perform the crawl (i.e. follow links) and how to extract structured data from their pages (i.e. scraping items). In other words, Spiders are the place where you define the custom behaviour for crawling and parsing pages for a particular site (or, in some cases, a group of sites).
+class MPPSpider(scrapy.Spider):	# We are creating a class called MPPSpider
 
 	name = "firstspider"	# The name of this spider
 
@@ -205,6 +206,13 @@ class MPPSpider(scrapy.Spider):	# The scrapy API provides us with a guideline of
 ~~~
 {: .source}
 
+~~~
+## Python classes
+
+The scrapy API provides us with a guideline of how to define a Spider __class__. Here, we are creating a class called MPPSpider, and are indicating it is a Spider class by in brackets using scrapy.Spider. A Spider class will define how a certain site (or a group of sites) will be scraped, including how to perform the crawl (i.e. follow links) and how to extract structured data from their pages (i.e. scraping items). In other words, Spiders are the place where you define the custom behaviour for crawling and parsing pages for a particular site (or, in some cases, a group of sites).
+~~~
+{: .discussion}
+
 Once this file has been saved, we can try running it. First, let's move back to the project's
 top level directory (where the `scrapy.cfg` file is) and then type
 
@@ -213,7 +221,7 @@ scrapy crawl firstspider
 ~~~
 {: .source}
 
-Note that we are able to use the name we specified in the `name` attribute of our spider`.
+Note that we are able to use the name we specified in the `name` attribute of our spider.
 This should produce the following result
 
 ~~~
@@ -702,8 +710,6 @@ for a full list of supported formats.
 
 FIXME: more challenges, conclusion
 FIXME: add more explanations about structure of Scrapy project, how it works, different elements.
+FIXME: add brief description of classes and objects
 
 ![Scrapy architecture overview](https://doc.scrapy.org/en/latest/_images/scrapy_architecture_02.png)
-
-
-
