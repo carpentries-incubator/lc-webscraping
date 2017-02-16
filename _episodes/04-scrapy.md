@@ -211,15 +211,18 @@ class MPPSpider(scrapy.Spider):	# We are creating a class called MPPSpider
 >
 > You might be unfamiliar with the `class MPPSpider(scrapy.Spider)` syntax used above.
 > This is an example of [Object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming).
+>
 > All elements of a piece of Python code are __objects__: functions, variables, strings, integers, etc.
 > Objects of a certain type have certain things in common. For example, it is possible to apply special
 > functions to all strings in Python by using syntax such as `mystring.upper()` (this will make the contents
 > of `mystring` all uppercase).
+>
 > We call these types of objects __classes__. A class defines the components of an object (called __attributes__),
 > as well as specific functions, called __methods__, we might want to run on those objects.
 > For example, we could define a class called `Pet` that would contain the attributes `name`, `colour`, `age` etc.
 > as well as the methods `run()` or `cuddle()`. Those are common to all pets.
-> We can use the Object-oriented paradigm to describe a specific type of pets: `Dog` would __inherit__ the
+>
+> We can use the Object-oriented paradigm to describe a specific type of pet: `Dog` would __inherit__ the
 > attributes and methods of `Pet` (dogs have names and can run and cuddle) but would __extend__ the `Pet` class
 > by adding dog-specific things like a `pedigree` attribute and a `bark()` method.
 >
@@ -229,9 +232,12 @@ class MPPSpider(scrapy.Spider):	# We are creating a class called MPPSpider
 >
 {: .discussion}
 
+> ## The `Spider` class
+>
 > A `Spider` class will define how a certain site (or a group of sites, defined in `start_urls`) will be scraped,
 > including how to perform the crawl (i.e. follow links) and how to extract structured data from their pages
 > (i.e. scraping items) in the `parse()` method.
+> 
 > In other words, Spiders are the place where we define the custom behaviour for crawling and parsing
 > pages for a particular site (or, in some cases, a group of sites).
 >
