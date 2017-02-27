@@ -1,17 +1,28 @@
 ---
-title: "IN DEVELOPMENT: Web scraping using Python and Scrapy"
-teaching: 60
+title: "Web scraping using Python and Scrapy"
+teaching: 90
 exercises: 30
 questions:
 - "How can scraping a web site be automated?"
+- "How can I setup a scraping project using the Scrapy framework for Python?"
+- "How do I tell Scrapy what elements to scrape from a webpage?"
+- "How do I tell Scrapy to follow URLs and scrape their contents?"
+- "What to do with the data extracted with Scrapy?"
 objectives:
-- "Writing a spider to scrape a website using Python and the Scrapy framework."
-- "Use popular web-based scraping services."
+- "Setting up a Scrapy project."
+- "Understanding the various elements of a Scrapy projects."
+- "Creating a spider to scrape a website and extract specific elements."
+- "Creating a two-step spider to first extract URLs, visit them, and scrape their contents."
+- "Storing the extracted data."
 keypoints:
-- "FIXME"
+- "Scrapy is a Python framework that can be use to scrape content from the web."
+- "A Scrapy project is a set of configuration files and pieces of code that tell Scrapy what to do."
+- "In Scrapy, a \"Spider\" is the code that tells it what to do on a specific website."
+- "A Scrapy project can have more than one spider but needs at least one."
+- "With Scrapy, we can use XPath, CSS selectors and Regular Expressions to define what elements to scrape from a page."
+- "Extracted data can be stored in \"Item\" objects. Such objects must be defined before they can be used."
+- "Scrapy will automatically stored extracted data in CSS, JSON or XML format based on the file extension given in the -o option."
 ---
-
-FIXME: this section needs more challenges
 
 ## Recap
 Here is what we have learned so far:
@@ -63,13 +74,13 @@ scrapy version
 in a shell. If all is good, you should get the following back (as of February 2017):
 
 ~~~
-Scrapy 1.3.1
+Scrapy 1.3.2
 ~~~
 {: .output}
 
 If you have a newer version, you should be fine as well.
 
-To introduce the use of Scrapy, we will reuse the same example we used with import.io in the previous
+To introduce the use of Scrapy, we will reuse the same example we used in the previous
 section. We will start by scraping a list of URLs from [the list of members of the Ontario Legislative
 Assembly](http://www.ontla.on.ca/web/members/members_current.do?locale=en) and then visit those URLs to
 scrape [detailed information](http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085)
@@ -175,7 +186,7 @@ We will introduce what those files are for in the next paragraphs. The most impo
 `spiders` directory: this is where we will write the scripts that will scrape the pages we
 are interested in. Scrapy calls such scripts _spiders_.
 
-## Writing our first spider
+## Creating a spider
 
 Spiders are the business end of the scraper. It's the bit of code that combs through a website and harvests data.
 Their general structure is as follows:
@@ -184,32 +195,59 @@ Their general structure is as follows:
   avoid mistakenly writing an out-of-hand spider that mistakenly starts crawling the entire Internet...)
 * A method called `parse` in which we will write what data the spider should be looking for on the pages
   it visits, what links to follow and how to parse found data.
+  
+To create a spider, Scrapy provides a handy command-line tool:
 
-Let's start with an example. Using our favourite text editor, let's create a file called `firstspider.py`
-inside the `ontariompps/ontariompps/spiders` directory with the following contents:
+~~~
+scrapy genspider <SCRAPER NAME> <START URL>
+~~~
+{: .source}
+  
+We just need to replace `<SCRAPER NAME>` with the name we want to give our spider and `<START URL>` with
+the URL we want to spider to crawl. In our case, we can type:
+
+~~~
+scrapy genspider mppaddresses www.ontla.on.ca/web/members/members_current.do?locale=en
+~~~
+{: .source}
+
+This will create a file called `mppaddresses.py` inside the `spiders` directory of our project.
+Using our favourite text editor, let's open that file. It should look something like this:
 
 ~~~
 import scrapy
 
-class MPPSpider(scrapy.Spider):	# We are creating a class called MPPSpider
 
-	name = "firstspider"	# The name of this spider
-
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses"  # The name of this spider
+	
 	# The allowed domain and the URLs where the spider should start crawling:
-	allowed_domains = ["www.ontla.on.ca"]
-	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
+    allowed_domains = ["www.ontla.on.ca/web/members/members_current.do?locale=en"]
+    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
-	def parse(self, response):
-		# The main method of the spider. The content of the scraped URL is passed on
-		# as the response object:
-		print(response.text)
+	# And a 'parse' function, which is the main method of the spider. The content of the scraped
+	# URL is passed on as the 'response' object:
+    def parse(self, response):
+        pass
 ~~~
 {: .source}
 
+Note that here some comments have been added for extra clarity, they will not be there upon
+first creating a spider.
+
+> ## Don't include http:// when running `scrapy genspider`
+>
+> The current version of Scrapy (1.3.2 - February 2017) apparently only expects URLs without
+> `http://` when running `scrapy genspider`. If you do include the `http` prefix, you might
+> see that the value in `start_url` in the generated spider will have that prefix twice, because
+> Scrapy appends it by default. This will cause your spider to fail. Either run `scrapy genspider`
+> without `http://` or check the resulting spider so that it looks like the code above.
+>
+{: .callout}
 
 > ## Object-oriented programming and Python classes
 >
-> You might be unfamiliar with the `class MPPSpider(scrapy.Spider)` syntax used above.
+> You might be unfamiliar with the `class MppaddressesSpider(scrapy.Spider)` syntax used above.
 > This is an example of [Object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming).
 >
 > All elements of a piece of Python code are __objects__: functions, variables, strings, integers, etc.
@@ -226,7 +264,7 @@ class MPPSpider(scrapy.Spider):	# We are creating a class called MPPSpider
 > attributes and methods of `Pet` (dogs have names and can run and cuddle) but would __extend__ the `Pet` class
 > by adding dog-specific things like a `pedigree` attribute and a `bark()` method.
 >
-> In the example above, we are defining a __class__ called `MPPSpider` that __inherits__ the `Spider` class
+> The code in the example above is defining a __class__ called `MppaddressesSpider` that __inherits__ the `Spider` class
 > defined by Scrapy (hence the `scrapy.Spider` syntax). We are __extending__ the default `Spider` class by defining
 > the `name`, `allowed_domains` and `start_urls` attributes, as well as the `parse()` method.
 >
@@ -243,32 +281,57 @@ class MPPSpider(scrapy.Spider):	# We are creating a class called MPPSpider
 >
 {: .callout}
 
-Once this file has been saved, we can try running it. First, let's move back to the project's
-top level directory (where the `scrapy.cfg` file is) and then type
+Once we have the spider open in a text editor, we can start by cleaning up a little the code that Scrapy
+has automatically generated. We see that by default the entire URL has ended up in the `allowed_domains`
+attribute. This might limit our spider once we start visiting other pages, so let's replace that value with
+just the base domain `www.ontla.on.ca`:
 
 ~~~
-scrapy crawl firstspider
+import scrapy
+
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses"  
+	
+    allowed_domains = ["www.ontla.on.ca"]
+    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
+
+    def parse(self, response):
+        pass
 ~~~
 {: .source}
 
-Note that we are able to use the name we specified in the `name` attribute of our spider.
-This should produce the following result
+Don't forget to save the file once changes have been applied.
+
+## Running the spider
+
+Now that we have a first spider setup, we can try running it. Going back to the Terminal, we first make sure
+we are located in the project's top level directory (where the `scrapy.cfg` file is) by using `ls`, `pwd` and
+`cd` as required, then we can run:
 
 ~~~
-2016-11-07 22:28:51 [scrapy] INFO: Scrapy 1.2.0 started (bot: ontariompps)
+scrapy crawl mppaddresses
+~~~
+{: .source}
 
-(followed by some additional data and a bunch of HTML content)
+Note that we can now use the name we have chosen for our spider (`mppaddresses`, as specified in the `name` attribute)
+to call it. This should produce the following result
 
-2016-11-07 22:28:53 [scrapy] INFO: Closing spider (finished)
-2016-11-07 22:28:53 [scrapy] INFO: Dumping Scrapy stats:
-{'downloader/request_bytes': 476,
+~~~
+2016-11-07 22:28:51 [scrapy] INFO: Scrapy 1.3.2 started (bot: mppaddresses)
+
+(followed by a bunch of debugging output ending with:)
+
+2017-02-26 22:08:51 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.ontla.on.ca/web/members/members_current.do?locale=en/> (referer: None)
+2017-02-26 22:08:52 [scrapy.core.engine] INFO: Closing spider (finished)
+2017-02-26 22:08:52 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 477,
  'downloader/request_count': 2,
  'downloader/request_method_count/GET': 2,
- 'downloader/response_bytes': 34319,
+ 'downloader/response_bytes': 34187,
  'downloader/response_count': 2,
  'downloader/response_status_count/200': 2,
  'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2016, 11, 8, 3, 28, 53, 447656),
+ 'finish_time': datetime.datetime(2017, 2, 27, 3, 8, 52, 16404),
  'log_count/DEBUG': 3,
  'log_count/INFO': 7,
  'response_received_count': 2,
@@ -276,45 +339,45 @@ This should produce the following result
  'scheduler/dequeued/memory': 1,
  'scheduler/enqueued': 1,
  'scheduler/enqueued/memory': 1,
- 'start_time': datetime.datetime(2016, 11, 8, 3, 28, 52, 980198)}
-2016-11-07 22:28:53 [scrapy] INFO: Spider closed (finished)
+ 'start_time': datetime.datetime(2017, 2, 27, 3, 8, 51, 594573)}
+2017-02-26 22:08:52 [scrapy.core.engine] INFO: Spider closed (finished)
+
 ~~~
 {: .output}
 
-The HTML that was printed before the "Closing spider" statement was in fact the output of our script's
-`print(response.text)` function. This means that our first run was successful, the spider opened
-the URL we specified, passed it to the `parse` method as the `response` object, which was then printed
-to the console using the `print()` function.
+The line that starts with `DEBUG: Crawled (200)` is good news, as it tells us that the spider was
+able to crawl the website we were after. The number in parentheses is the _HTTP status code_ that
+Scrapy received in response of its request to access that page. 200 means that the request was successful
+and that data (the actual HTML content of that page) was sent back in response.
 
-Dumping data on the console's standard output is not very practical, however, so we can modify our
-script to have the resulted data be stored in a file:
+However, we didn't do anything with it, because the `parse` method in our spider is currently empty.
+Let's change that by editing the spider as follows (note the contents of the `parse` method):
 
-(editing `ontariompps/ontariompps/spiders/firstspider.py`)
+(editing `ontariompps/ontariompps/spiders/mppaddresses.py`)
 
 ~~~
 import scrapy
 
-class MPPSpider(scrapy.Spider):
-	name = "firstspider"	# The name of this spider
 
-	# The allowed domain and the URLs where the spider should start crawling:
-	allowed_domains = ["www.ontla.on.ca"]
-	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses"
+    allowed_domains = ["www.ontla.on.ca/web/members/members_current.do?locale=en"]
+    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
-	def parse(self, response):
-		with open("test.html", 'wb') as file:
-			file.write(response.body)
+    def parse(self, response):
+        with open("test.html", 'wb') as file:
+            file.write(response.body)
 ~~~
 {: .source}
 
-Now, if we run our spider again
+Now, if we go back to the command line and run our spider again
 
 ~~~
-scrapy crawl firstspider
+scrapy crawl mppaddresses
 ~~~
 {: .source}
 
-the output on the console should be much shorter. Instead, there is now a file called
+we should get similar debugging output as before, but there should also now be a file called
 `test.html` in our project's root directory:
 
 ~~~
