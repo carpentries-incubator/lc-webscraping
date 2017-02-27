@@ -217,7 +217,6 @@ Using our favourite text editor, let's open that file. It should look something 
 ~~~
 import scrapy
 
-
 class MppaddressesSpider(scrapy.Spider):
     name = "mppaddresses"  # The name of this spider
 	
@@ -406,11 +405,11 @@ less test.html
 Legislative Assembly of Ontario |
 Members (MPPs) |
 Current MPPs</title>
-(...)
+(...)_
 ~~~
 {: .output}
 
-## Define which elements to scrape using XPath
+## Defining which elements to scrape using XPath
 
 Now that we know how to access the content of the [web page with the list of all Ontario MPPs](http://www.ontla.on.ca/web/members/members_current.do?locale=en),
 the next step is to extract the information we are interested in, in that case the URLs pointing
@@ -495,11 +494,119 @@ This returns an array of objects:
 ~~~
 {: .output}
 
-Looking at this result and at the source code of the page, we realize that the URLs are all
-_relative_ to that page. They are all missing part of the URL to become _absolute_ URLs, which
-we will need if we want to ask our spider to visit those URLs to scrape more data. We will therefore
-need to append `http://www.ontla.on.ca/web/members/` to all of those ULRs before we can use them.
+### Debugging using the Scrapy shell
 
+As we learned in the previous section, using the browser console and the `$x()` syntax can be useful to make sure
+we are selecting the desired elements using our XPath queries. But it is not the only way. Scrapy provides a similar
+way to test out XPath queries, with the added benefit that we can then also debug how to further work on those
+queries from within Scrapy.
+
+This is achieved by calling the _Scrapy shell_ from the command line:
+
+~~~
+scrapy shell http://www.ontla.on.ca/web/members/members_current.do?locale=en/
+~~~
+{: .source}
+
+which launches a Python console that allows us to type live Python and Scrapy code to
+interact with the page which Scrapy just downloaded from the provided URL. We can see that we are inside an
+interactive python console because the prompt will have changed to `>>>`:
+
+~~~
+(similar Scrapy debug text as before)
+
+2017-02-26 22:31:04 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.ontla.on.ca/web/members/members_current.do?locale=en/> (referer: None)
+[s] Available Scrapy objects:
+[s]   scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)
+[s]   crawler    <scrapy.crawler.Crawler object at 0x1114356d8>
+[s]   item       {}
+[s]   request    <GET http://www.ontla.on.ca/web/members/members_current.do?locale=en/>
+[s]   response   <200 http://www.ontla.on.ca/web/members/members_current.do?locale=en/>
+[s]   settings   <scrapy.settings.Settings object at 0x111f40908>
+[s]   spider     <DefaultSpider 'default' at 0x11320acc0>
+[s] Useful shortcuts:
+[s]   fetch(url[, redirect=True]) Fetch URL and update local objects (by default, redirects are followed)
+[s]   fetch(req)                  Fetch a scrapy.Request and update local objects 
+[s]   shelp()           Shell help (print this help)
+[s]   view(response)    View response in a browser
+>>>
+~~~
+{: .output}
+
+We can now try running the XPath query we just devised against the `response` object, which in Scrapy
+contains the downloaded web page:
+
+~~~
+>>> response.xpath("//td[@class='mppcell']/a/@href")
+~~~
+{: .source}
+
+This will return a bunch of `Selector` objects (one for each URL found):
+
+~~~
+[<Selector xpath="//td[@class='mppcell']/a/@href" data='members_detail.do?locale=en&ID=7085'>, 
+ <Selector xpath="//td[@class='mppcell']/a/@href" data='members_detail.do?locale=en&ID=7275'>,
+ ...]
+>>>
+~~~
+{: .output}
+
+Those objects are pointers to the different element in the scraped page (`href` attributes) as
+defined by our XPath query. To get to the actual content of those elements (the text of the URLs),
+we can use the `extract()` method. A variant of that method is `extract_first()` which does the
+same thing as `extract()` but only returns the first element if there are more than one:
+
+~~~
+>>> response.xpath("//td[@class='mppcell']/a/@href").extract_first()
+~~~
+{: .source}
+
+returns
+
+~~~
+'members_detail.do?locale=en&ID=7085'
+>>> 
+~~~
+{: .output}
+
+> ## Dealing with relative URLs
+>
+> Looking at this result and at the source code of the page, we realize that the URLs are all
+> _relative_ to that page. They are all missing part of the URL to become _absolute_ URLs, which
+> we will need if we want to ask our spider to visit those URLs to scrape more data. We could
+> prefix all those URLs with `http://www.ontla.on.ca/web/members/` to make them absolute, but
+> since this is a common occurence when scraping web pages, Scrapy provides a built-in function
+> to deal with this issue.
+>
+> To try it out, still in the Scrapy shell, let's first store the first returned URL into a
+> variable:
+>
+> ~~~
+> >>> testurl = response.xpath("//td[@class='mppcell']/a/@href").extract_first()
+> ~~~
+> {: .source}
+>
+> Then, we can try passing it on to the `urljoin()` method:
+>
+> ~~~
+> >>> response.urljoin(testurl)
+> ~~~
+> {: .source}
+>
+> which returns
+>
+> ~~~
+> 'http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085'
+> ~~~
+> {: .output}
+>
+> We see that Scrapy was able to reconstruct the absolute URL by combining the URL of the current page context
+> (the page in the `response` object) and the relative link we had stored in `testurl`.
+>
+{: .discussion}
+
+
+## Extracting URLs using the spider
 
 Armed with the correct query, we can now update our spider accordingly. The `parse`
 methods returns the contents of the scraped page inside the `response` object. That response
@@ -515,56 +622,66 @@ objects supports a variety of methods to act on its contents:
 Since we have an XPath query we know will extract the URLs we are looking for, we can now use
 the `xpath()` method and update the spider accordingly:
 
-(editing `ontariompps/ontariompps/spiders/firstspider.py`)
+(editing `ontariompps/ontariompps/spiders/mppaddresses.py`)
 
 ~~~
 import scrapy
 
-class MPPSpider(scrapy.Spider):
-	name = "getemails"	# The name of this spider
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses"
+    allowed_domains = ["www.ontla.on.ca"]
+	start\_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
-	# The allowed domain and the URLs where the spider should start crawling:
-	allowed_domains = ["www.ontla.on.ca"]
-	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-
-	def parse(self, response):
-		# The main method of the spider. The content of the scraped URL is passed on
-		# as the response object:
-		for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
-			url = 'http://www.ontla.on.ca/web/members/' + url
-		    print(url)
+    def parse(self, response):
+        for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
+            print(response.urljoin(url))
 ~~~
 {: .source}
 
-Note also the following additional changes:
-* Since `response.xpath(...)` will return more than one object (as many as there are URLs on the page),
-  we are using a `for` construct to loop through all of them.
-* We use the `extract()` method on the returned objects to extract their text content
-* As we saw earlier, the URLs extracted from the page are all relative. We must therefore append
-  `http://www.ontla.on.ca/web/members/` to all of them to make them absolute.
+> ## Looping through results
+>
+> Why are we using `extract()` instead of `extract_first()` in the code above?
+> Why is the `print` statement inside a `for` clause?
+> > ## Solution
+> > 
+> > We are not only interested in the first extracted URL but in all of them.
+> > `extract_first()` only returns the content of the first in a series of
+> > selected elements, while `extract()` will return all of them in the form of an
+> > array.
+> > 
+> > The `for` syntax allows us to loop through each of the returned elements one by one.
+> >
+> {: .solution}
+{: .challenge}
 
 We can now run our new spider:
 
 ~~~
-scrapy crawl getemails
+scrapy crawl mppaddresses
 ~~~
 {: .source}
 
 which produces a result similar to:
 
 ~~~
-2016-11-07 22:55:19 [scrapy] INFO: Scrapy 1.2.0 started (bot: ontariompps)
+2017-02-26 23:06:10 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: ontariompps)
 (...)
 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=2111
 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=2139
 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7174
 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=2148
 (...)
-2016-11-07 22:55:20 [scrapy] INFO: Spider closed (finished)
+2017-02-26 23:06:11 [scrapy.core.engine] INFO: Spider closed (finished)
 ~~~
 {: .output}
 
+We can now pat ourselves on the back, as we have successfully completed the first stage
+of our project by successfully extracing all URLs leading to the minister profiles!
+
+
 ## Recursive scraping
+
+FIXME starting here.
 
 Now that we were successful in harvesting the URLs to the detail pages, let's look at those
 detail pages to find the information that needs to be extracted. We are primarily looking
