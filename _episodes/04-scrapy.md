@@ -603,7 +603,7 @@ returns
 > We see that Scrapy was able to reconstruct the absolute URL by combining the URL of the current page context
 > (the page in the `response` object) and the relative link we had stored in `testurl`.
 >
-{: .discussion}
+{: .callout}
 
 
 ## Extracting URLs using the spider
