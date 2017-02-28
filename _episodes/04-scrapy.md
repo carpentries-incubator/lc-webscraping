@@ -678,13 +678,108 @@ http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=2148
 We can now pat ourselves on the back, as we have successfully completed the first stage
 of our project by successfully extracing all URLs leading to the minister profiles!
 
+> ## Limit the number of URL to scrape through while debugging
+>
+> We've seen by testing the code above that we are able to successfully gather all URLs from
+> the list of MPPs. But while we're working through to the final code that will allow us
+> the extract the data we want from those pages, it's probably a good idea to only run it
+> on a handful of pages at a time.
+>
+> This will not only run faster and allow us to iterate more quickly between different
+> revisions of our code, it will also not burden the server too much while we're debugging.
+> This is probably not such an issue for a couple of hundred of pages, but it's good
+> practice, as it can make a difference for larger scraping projects. If you are planning
+> to scrape a massive website with thousands of pages, it's better to start small. Other
+> visitors to that site will thank you for respecting their legitimate desire to access
+> it while you're debugging your scraper...
+>
+> An easy way to limit the number of URLs we want to send our spider to is to
+> take advantage of the fact that the `extract()` method returns a list of matching elements.
+> In Python, lists can be _sliced_ using the `list[start:end]` syntax and we can leave out
+> either the `start` or `end` delimiters:
+> 
+> ~~~
+> list[start:end] # items from start through end-1
+> list[start:]    # items from start through the rest of the array
+> list[:end]      # items from the beginning through end-1
+> list[:]         # all items
+> ~~~
+> 
+> We can therefore edit our spider thusly to only scrape the first five URLs:
+>
+> ~~~
+> import scrapy
+> 
+>	class MppaddressesSpider(scrapy.Spider):
+>		name = "mppaddresses"
+>		allowed_domains = ["www.ontla.on.ca"]
+>	    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
+>
+>	    def parse(self, response):
+>	        for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+>	            print(response.urljoin(url))
+> ~~~
+> {: .source}
+>
+> Note that this only works if there are at least five URLs that are being returned, which
+> is the case here.
+> 
+{: .callout}
 
 ## Recursive scraping
 
-FIXME starting here.
+Now that we were successful in harvesting the URLs to the detail pages, let's begin by editing
+our spider to instruct it to visit those pages one by one.
 
-Now that we were successful in harvesting the URLs to the detail pages, let's look at those
-detail pages to find the information that needs to be extracted. We are primarily looking
+For this, let's begin by defining a new method `get_details` that we want to run on the detail pages:
+
+
+(editing `ontariompps/ontariompps/spiders/mppaddresses.py`)
+
+~~~
+import scrapy
+
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses" # The name of this spider
+    
+    # The allowed domain and the URLs where the spider should start crawling:
+    allowed_domains = ["www.ontla.on.ca"]
+    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
+
+    def parse(self, response):
+		# The main method of the spider. It scrapes the URL(s) specified in the
+        # 'start_url' argument above. The content of the scraped URL is passed on
+		# as the 'response' object.
+        for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+            # This loops through all the URLs found inside an element of class 'mppcell'
+            
+            # Constructs an absolute URL by combining the response’s URL with a possible relative URL:
+            full_url = response.urljoin(url)
+            print("Found URL: "+full_url)
+            
+            # The following tells Scrapy to scrape the URL in the 'full_url' variable
+            # and calls the 'get_details() method below with the content of this
+            # URL:
+            yield scrapy.Request(full_url, callback=self.get_details)
+    
+    def get_details(self, response):
+		# This method is called on by the 'parse' method above. It scrapes the URLs
+        # that have been extracted in the previous step.
+        print("Visited URL: "+response.url)
+~~~
+{: .source}
+
+We've also added some comments to the code to make it easier to read and understand.
+
+
+
+
+
+
+
+
+
+In our example, we are primarily looking
 to extract the following details:
 
 * Phone number(s)
@@ -698,7 +793,7 @@ To simplify, we are going to stop at the first phone number and the first
 email address we find on those pages, although in a real life scenario we might be interested
 in writing more precise queries to make sure we are collecting the right information.
 
-> ## Scrape the phone number and email address
+> ## Scrape phone number and email address
 > Write XPath queries to scrape the first phone number and the first email address
 > displayed on each of the detail pages that are linked from
 > the [Ontario MPPs list](http://www.ontla.on.ca/web/members/members_current.do?locale=en).
@@ -708,62 +803,46 @@ in writing more precise queries to make sure we are collecting the right informa
 >
 > Tips:
 >
-> * Look at the source code and try out XPath queries in the console until you find what
+> * Look at the source code and try out XPath your queries until you find what
 >   you are looking for.
+> * You can either use the browser console or the Scrapy shell mode (see above)
+>   to try out your queries.
 > * The syntax for selecting an element like `<div class="mytarget">` is `div[@class = 'mytarget']`.
 > * The syntax to select the value of an attribute of the type `<element attribute="value">`
 >   is `element/@attribute`.
 >
 > > ## Solution
 > >
-> > This returns an array of phone (and fax) numbers:
+> > This returns an array of phone (and fax) numbers (using the Scrapy shell):
 > >
 > > ~~~
-> > > $x("//div[@class='phone']/text()")
+> > scrapy shell "http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085"
+> > >>> response.xpath("//div[@class='phone']/text()").extract()
 > > ~~~
 > > {: .source}
+> >
+> > ~~~
+> > [['\n416-325-6200\n', '\n416-325-6195\n', '\n416-243-7984\n', '\n416-243-0327\n']
+> > ~~~
+> > {: .output}> >
 > >
 > > And this returns an array of email addresses:
 > >
 > > ~~~
-> > > $x("//div[@class='email']/a/text()")
+> > >>> response.xpath("//div[@class='email']/a/text()").extract()
 > > ~~~
 > > {: .source}> >
+> >
+> > ~~~
+> > ['\nlalbanese.mpp@liberal.ola.org\n', '\nlalbanese.mpp.co@liberal.ola.org\n']
+> > ~~~
+> > {: .output}> >
 > >
 > {: .solution}
 {: .challenge}
 
-> ## Use the Scrapy shell to try out XPath queries
->
-> Another way to try out XPath queries is to use Scrapy in interactive mode.
-> By running
->
-> ~~~
-> scrapy shell "http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085"
-> ~~~
-> {: .source}
->
-> we get an iPython shell in which the `response` object containing the content of the page
-> passed on to Scrapy is available, as well as the methods to apply selectors to it.
-> We can use that to refine our queries until we get exactly what we are looking for:
->
-> ~~~
-> In [1]: response.xpath("//div[@class='email']/a/text()").extract()
-> Out[1]: ['\nlalbanese.mpp@liberal.ola.org\n', '\nlalbanese.mpp.co@liberal.ola.org\n']
->
-> In [2]: response.xpath("//div[@class='email']/a/text()").extract()[0]
-> Out[2]: '\nlalbanese.mpp@liberal.ola.org\n'
->
-> In [3]: response.xpath("normalize-space(//div[@class='email']/a/text())").extract()[0]
-> Out[3]: 'lalbanese.mpp@liberal.ola.org'
-> ~~~
-> {: .source}
->
-> Use `Ctrl-D` (`Ctrl-Z` on Windows) to get out of the interactive shell.
-{: .callout}
 
 
-FIXME: describe this step in more detail
 
 (editing `ontariompps/ontariompps/spiders/firstspider.py`)
 
