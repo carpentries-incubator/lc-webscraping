@@ -623,7 +623,8 @@ $x("//h2[@id='navigating-through-the-html-node-tree-using-xpath']/following-sibl
 ~~~
 {: .source}
 
-FIXME: add more XPath functions such as concat() and normalize-space() as well as a link to a good reference.
+FIXME: add more XPath functions such as concat() and normalize-space().
+FIXME: mention [XPath Checker for Firefox](https://addons.mozilla.org/en-US/firefox/addon/xpath-checker/)
 
 # References
 
