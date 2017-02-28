@@ -748,38 +748,86 @@ class MppaddressesSpider(scrapy.Spider):
 
     def parse(self, response):
 		# The main method of the spider. It scrapes the URL(s) specified in the
-        # 'start_url' argument above. The content of the scraped URL is passed on
+		# 'start_url' argument above. The content of the scraped URL is passed on
 		# as the 'response' object.
-        for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
-            # This loops through all the URLs found inside an element of class 'mppcell'
+        
+		for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+			# This loops through all the URLs found inside an element of class 'mppcell'
+			
+			# Constructs an absolute URL by combining the response’s URL with a possible relative URL:
+			full_url = response.urljoin(url)
+			print("Found URL: "+full_url)
             
-            # Constructs an absolute URL by combining the response’s URL with a possible relative URL:
-            full_url = response.urljoin(url)
-            print("Found URL: "+full_url)
-            
-            # The following tells Scrapy to scrape the URL in the 'full_url' variable
-            # and calls the 'get_details() method below with the content of this
-            # URL:
-            yield scrapy.Request(full_url, callback=self.get_details)
+			# The following tells Scrapy to scrape the URL in the 'full_url' variable
+			# and calls the 'get_details() method below with the content of this
+			# URL:
+			yield scrapy.Request(full_url, callback=self.get_details)
     
-    def get_details(self, response):
+	def get_details(self, response):
 		# This method is called on by the 'parse' method above. It scrapes the URLs
-        # that have been extracted in the previous step.
-        print("Visited URL: "+response.url)
+		# that have been extracted in the previous step.
+		print("Visited URL: "+response.url)
 ~~~
 {: .source}
 
 We've also added some comments to the code to make it easier to read and understand.
 
+If we now run our spider again:
 
+~~~
+scrapy crawl mppaddresses
+~~~
+{: .source}
 
+We should see the result of our `print` statements intersped with the regular Scrapy
+debugging output, something like:
 
+~~~
+2017-02-27 20:39:42 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: ontariompps)
+(...)
+2017-02-27 20:39:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.ontla.on.ca/web/members/members_current.do?locale=en/> (referer: None)
+Found URL: http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085
+Found URL: http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7275
+(...)
+2017-02-27 20:39:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085> (referer: http://www.ontla.on.ca/web/members/members_current.do?locale=en/)
+(...)
+Visited URL: http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085
+(...)
+2017-02-27 20:39:44 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7086> (referer: http://www.ontla.on.ca/web/members/members_current.do?locale=en/)
+(...)
+Visited URL: http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7225
+(...)
+2017-02-27 20:39:44 [scrapy.core.engine] INFO: Closing spider (finished)
+~~~
+{: .output}
 
+We've truncated the results above to make it easier to read, but on your console
+you should see that all 5 URLs (remember, we are limiting the number of URLs to scrape
+for now) have been first "found" (by the `parse()` method) and then "visited"
+(by the `get_details()` method).
 
+> ## Asynchronous requests
+>
+> If you look closely at the output of the code we've just run, you might be surprised
+> to see that the "Found URL" and "Visited URL" statements didn't necessarily get
+> printed out one after the other, as we might expect.
+>
+> The reason this is so is that Scrapy requests are [scheduled and processed asynchronously](http://stackoverflow.com/questions/748175/asynchronous-vs-synchronous-execution-what-does-it-really-mean).
+> This means that Scrapy doesn’t need to wait for a request to be finished and processed
+> before it runs another or do other things in the meantime. This is more efficient
+> than running each request one after the other, and it also allows for Scrapy to keep
+> working away even if some requests fails for whatever reason.
+>
+> This is especially advantageous when scraping large websites. Depending on the resources
+> of the computer on which Scrapy runs, it can scrape hundreds or thousands of pages
+> simultaneously.
+> 
+{: .callout}
 
+## Scrape the detail pages
 
-
-In our example, we are primarily looking
+Now that we are able to visit each one of the detail pages, we should work on getting the
+data that we want out of them. In our example, we are primarily looking
 to extract the following details:
 
 * Phone number(s)
@@ -841,7 +889,8 @@ in writing more precise queries to make sure we are collecting the right informa
 > {: .solution}
 {: .challenge}
 
-
+Once we have found XPath queries to run on the detail pages and are happy with the result,
+we can add them to the `get_details()` method of our spider:
 
 
 (editing `ontariompps/ontariompps/spiders/firstspider.py`)
@@ -849,31 +898,65 @@ in writing more precise queries to make sure we are collecting the right informa
 ~~~
 import scrapy
 
-class MPPSpider(scrapy.Spider):
-	name = "getemails"	# The name of this spider
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses" # The name of this spider
+    
+    # The allowed domain and the URLs where the spider should start crawling:
+    allowed_domains = ["www.ontla.on.ca"]
+    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
-	# The allowed domain and the URLs where the spider should start crawling:
-	allowed_domains = ["www.ontla.on.ca"]
-	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-
-	def parse(self, response):
-		# The main method of the spider. The content of the scraped URL is passed on
-		# as the response object:
-		for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
-		    url = 'http://www.ontla.on.ca/web/members/' + url
-		    yield scrapy.Request(url, callback=self.get_details)
-
+    def parse(self, response):
+		# The main method of the spider. It scrapes the URL(s) specified in the
+		# 'start_url' argument above. The content of the scraped URL is passed on
+		# as the 'response' object.
+        
+		for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+			# This loops through all the URLs found inside an element of class 'mppcell'
+			
+			# Constructs an absolute URL by combining the response’s URL with a possible relative URL:
+			full_url = response.urljoin(url)
+			print("Found URL: "+full_url)
+            
+			# The following tells Scrapy to scrape the URL in the 'full_url' variable
+			# and calls the 'get_details() method below with the content of this
+			# URL:
+			yield scrapy.Request(full_url, callback=self.get_details)
+    
 	def get_details(self, response):
-	    name_detail = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract()[0]
-	    phone_detail = response.xpath("normalize-space(//div[@class='phone']/text())").extract()[0]
-	    email_detail = response.xpath("normalize-space(//div[@class='email']/a/text())").extract()[0]
-	    print(name_detail + ', ' + phone_detail + ', ' + email_detail)
+		# This method is called on by the 'parse' method above. It scrapes the URLs
+		# that have been extracted in the previous step.
+		name_detail = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract_first()
+		phone_detail = response.xpath("normalize-space(//div[@class='phone']/text())").extract_first()
+		email_detail = response.xpath("normalize-space(//div[@class='email']/a/text())").extract_first()
+		print("Found details: " + name_detail + ', ' + phone_detail + ', ' + email_detail)
 ~~~
 {: .source}
 
-yield is like return, but for potentially large datasets. Basically when you don't know from the beginning
-how big the dataset will be.
-Also: return implies that the function is returning control of execution to the point where the function was called. yield, however, implies that the transfer of control is temporary and voluntary, and our function expects to regain it in the future. From http://jeffknupp.com/blog/2013/04/07/improve-your-python-yield-and-generators-explained/
+Running our scraper again
+
+~~~
+scrapy crawl mppaddresses
+~~~
+{: .source}
+
+produces something like
+
+~~~
+2017-02-27 20:39:42 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: ontariompps)
+(...)
+2017-02-27 20:39:43 [scrapy.core.engine] DEBUG: Crawled (200) <GET http://www.ontla.on.ca/web/members/members_current.do?locale=en/> (referer: None)
+Found URL: http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085
+Found URL: http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7275
+(...)
+Found details: Ted Arnott, MPP (Wellington—Halton Hills), 416-325-3880, ted.arnott@pc.ola.org
+Found details: Teresa J. Armstrong, MPP (London—Fanshawe), 416-325-1872, tarmstrong-qp@ndp.on.ca
+(...)
+2017-02-27 20:39:44 [scrapy.core.engine] INFO: Closing spider (finished)
+~~~
+{: .output}
+
+We appear to be getting somewhere! The last step is doing something useful with the
+scraped data instead of printing it out on the terminal. Enter the Scrapy Items.
 
 ## Using Items to store scraped data
 
