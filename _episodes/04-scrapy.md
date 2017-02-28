@@ -33,15 +33,11 @@ Here is what we have learned so far:
 * We can use the browser console and the `$x(...)` function to try out XPath queries on a live site.
 * We can use the Scraper browser extension to scrape data from a single web page. Its interface even
   tries to guess the XPath query to target the elements we are interested in.
-* We can use web tools such as import.io to scrape data from more than one web page, by querying a list
-  of URLs or even by using one scraper to extract URLs and a second one to harvest data on those pages.
 
 This is quite a toolset already, and it's probably sufficient for a number of use cases, but there are
 limitations in using the tools we have seen so far. Scraper requires manual intervention and only scrapes
 one page at a time. Even though it is possible to save a query for later, it still requires us to operate
-the extension. import.io has a nifty schedule function to allow us to let the scraper run on its own at
-certain intervals and update information automatically. However, scraping more than 500 URLs per month is
-expensive and the interface can be difficult to operate for more complex queries.
+the extension.
 
 ## Introducing Scrapy
 
