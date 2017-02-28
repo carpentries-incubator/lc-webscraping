@@ -871,21 +871,22 @@ in writing more precise queries to make sure we are collecting the right informa
 > > ~~~
 > > [['\n416-325-6200\n', '\n416-325-6195\n', '\n416-243-7984\n', '\n416-243-0327\n']
 > > ~~~
-> > {: .output}> >
+> > {: .output}
 > >
 > > And this returns an array of email addresses:
 > >
 > > ~~~
 > > >>> response.xpath("//div[@class='email']/a/text()").extract()
 > > ~~~
-> > {: .source}> >
+> > {: .source}
 > >
 > > ~~~
 > > ['\nlalbanese.mpp@liberal.ola.org\n', '\nlalbanese.mpp.co@liberal.ola.org\n']
 > > ~~~
-> > {: .output}> >
+> > {: .output}
 > >
 > {: .solution}
+>
 {: .challenge}
 
 Once we have found XPath queries to run on the detail pages and are happy with the result,
