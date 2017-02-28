@@ -628,4 +628,4 @@ FIXME: add more XPath functions such as concat() and normalize-space() as well a
 # References
 
 * [W3Schools: JavaScript HTML DOM Navigation](http://www.w3schools.com/js/js_htmldom_navigation.asp)
-* [Cheatsheet](/library-webscraping/extras/xpath-cheatsheet.md.pdf)
+* [XPath Cheatsheet](/library-webscraping/extras/xpath-cheatsheet.md.pdf)

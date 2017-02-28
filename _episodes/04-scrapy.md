@@ -821,6 +821,9 @@ for now) have been first "found" (by the `parse()` method) and then "visited"
 > This is especially advantageous when scraping large websites. Depending on the resources
 > of the computer on which Scrapy runs, it can scrape hundreds or thousands of pages
 > simultaneously.
+>
+> If you want to know more, the Scrapy documentation
+> [has a page detailing how the data flows between Scrapy's components ](https://doc.scrapy.org/en/latest/topics/architecture.html#topics-architecture).
 > 
 {: .callout}
 
@@ -893,7 +896,7 @@ Once we have found XPath queries to run on the detail pages and are happy with t
 we can add them to the `get_details()` method of our spider:
 
 
-(editing `ontariompps/ontariompps/spiders/firstspider.py`)
+(editing `ontariompps/ontariompps/spiders/mppaddresses.py`)
 
 ~~~
 import scrapy
@@ -960,117 +963,218 @@ scraped data instead of printing it out on the terminal. Enter the Scrapy Items.
 
 ## Using Items to store scraped data
 
-FIXME: add more details here
+Scrapy conveniently includes a mechanism to collect scraped data and output it
+in several different useful ways. It uses objects called `Items`. Those are akin
+to Python dictionaries in that each Item can contain one or more fields to
+store individual data element. Another way to put it is, if you visualize the
+data as a spreadsheet, each Item represents a row of data, and the fields within
+each item are columns.
 
-This is where the data extracted will be stored. Items work like Python dictionaries.
+Before we can begin using Items, we need to define their structure. Using our editor,
+let's navigate and edit the following file that Scrapy has created for us when we
+first created our project: `ontariompps/ontariompps/items.py`
 
-Edit `ontariompps/ontariompps/items.py`
+Scrapy has pre-populated this file with an empty "OntariomppsItem" class:
 
-(You will see Scrapy has pre-populated this file)
+(editing `ontariompps/ontariompps/items.py`)
 
 ~~~
 import scrapy
 
+class OntariomppsItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    pass
+~~~
+{: .output}
+
+Let's add a few fields to store the data we aim to extract from the detail pages
+for each politician:
+
+~~~
+import scrapy
 
 class OntariomppsItem(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()
-    email = scrapy.Field()
     phone = scrapy.Field()
+	email = scrapy.Field()
 ~~~
 {: .source}
 
-Then edit the spider accordingly:
+Then save this file. We can then edit our spider one more time:
 
-(editing `ontariompps/ontariompps/spiders/firstspider.py`)
+(editing `ontariompps/ontariompps/spiders/mppaddresses.py`)
 
 ~~~
 import scrapy
 from ontariompps.items import OntariomppsItem # We need this so that Python knows about the item object
 
-class MPPSpider(scrapy.Spider):
-	name = "getemails"	# The name of this spider
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses" # The name of this spider
+    
+    # The allowed domain and the URLs where the spider should start crawling:
+    allowed_domains = ["www.ontla.on.ca"]
+    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
-	# The allowed domain and the URLs where the spider should start crawling:
-	allowed_domains = ["www.ontla.on.ca"]
-	start_urls = ["http://www.ontla.on.ca/web/members/members_current.do?locale=en"]
-
-	def parse(self, response):
-		# The main method of the spider. The content of the scraped URL is passed on
-		# as the response object:
-		for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
-		    url = 'http://www.ontla.on.ca/web/members/' + url
-		    yield scrapy.Request(url, callback=self.get_details) # callback to get_details
-
-	def get_details(self, response):
-	    item = OntariomppsItem() # Defining a new Item object
-	    item['name'] = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract()[0]
-	    item['phone'] = response.xpath("normalize-space(//div[@class='phone']/text())").extract()[0]
-	    item['email'] = response.xpath("normalize-space(//div[@class='email']/a/text())").extract()[0]
-	    yield item # Return the item
+    def parse(self, response):
+		# The main method of the spider. It scrapes the URL(s) specified in the
+        # 'start_url' argument above. The content of the scraped URL is passed on
+		# as the 'response' object.
+        for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+            # This loops through all the URLs found inside an element of class 'mppcell'
+            
+            # Constructs an absolute URL by combining the response’s URL with a possible relative URL:
+            full_url = response.urljoin(url)
+            print("Found URL: "+full_url)
+            
+            # The following tells Scrapy to scrape the URL in the 'full_url' variable
+            # and calls the 'get_details() method below with the content of this
+            # URL:
+            yield scrapy.Request(full_url, callback=self.get_details)
+    
+    def get_details(self, response):
+		# This method is called on by the 'parse' method above. It scrapes the URLs
+        # that have been extracted in the previous step.
+        
+        item = OntariomppsItem() # Creating a new Item object
+        # Store scraped data into that item:
+        item['name'] = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract_first()
+        item['phone'] = response.xpath("normalize-space(//div[@class='phone']/text())").extract_first()
+        item['email'] = response.xpath("normalize-space(//div[@class='email']/a/text())").extract_first()
+	    
+        # Return that item to the main spider method:
+        yield item
 
 ~~~
 {: .source}
 
-Running it like this:
+We made two significant changes to the file above:
+* We've included the line `from ontariompps.items import OntariomppsItem` at the top. This is required
+  so that our spider knows about the `OntariomppsItem` object we've just defined.
+* We've also replaced the `print` statements in `get_details()` with the creation of an `OntariomppsItem`
+  object, in which fields we are now storing the scraped data. The item is then passed back to the
+  main spider method using the `yield` statement.
+  
+If we now run our spider again:
 
 ~~~
-scrapy crawl getemails
+scrapy crawl mppaddresses
 ~~~
 {: .source}
 
-will by default just output the extracted information in JSON snippets mixed with the
-usual Scrapy logging information:
+we see something like
 
 ~~~
+2017-02-27 21:53:52 [scrapy.utils.log] INFO: Scrapy 1.3.2 started (bot: ontariompps)
 (...)
-2016-11-08 22:27:13 [scrapy] DEBUG: Scraped from <200 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7>
-{'email': 'gbisson@ndp.on.ca',
- 'name': 'Gilles Bisson, MPP (Timmins—James Bay)',
- 'phone': '416-325-7122'}
-2016-11-08 22:27:13 [scrapy] DEBUG: Scraped from <200 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7275>
-{'email': 'ganderson.mpp.co@liberal.ola.org',
- 'name': 'Granville Anderson, MPP (Durham)',
- 'phone': '416-325-5494'}
+2017-02-27 21:53:54 [scrapy.core.scraper] DEBUG: Scraped from <200 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085>
+{'email': 'lalbanese.mpp@liberal.ola.org',
+ 'name': 'Hon Laura Albanese, MPP (York South—Weston)',
+ 'phone': '416-325-6200'}
+2017-02-27 21:53:54 [scrapy.core.scraper] DEBUG: Scraped from <200 http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7183>
+{'email': 'tarmstrong-qp@ndp.on.ca',
+ 'name': 'Teresa J. Armstrong, MPP (London—Fanshawe)',
+ 'phone': '416-325-1872'}
 (...)
+2017-02-27 21:53:54 [scrapy.core.engine] INFO: Spider closed (finished)
 ~~~
 {: .output}
 
-But by adding an `-o file.ext` argument, we can save the resulting data directly to a file
-in the format we prefer:
+We see that Scrapy is dumping the contents of the items within the debugging output using
+a syntax that looks a lot like JSON.
+
+But let's now try running the spider with an extra `-o` ('o' for 'output') argument that
+specifies the name of an output file with a `.csv` file extension:
 
 ~~~
-scrapy crawl getemails -o mpps.csv
+scrapy crawl mppaddresses -o output.csv
 ~~~
 {: .source}
 
-will produce a file called `mpps.csv` containing all the extracted information in CSV format:
+This produces similar debugging output as the previous run, but now let's look inside the
+directory in which we just ran Scrapy and we'll see that it has created a file called
+`output.csv`, and when we try looking inside that file, we see that it contains the
+scraped data, conveniently arranged using the Comma-Separated Values (CSV) format, ready
+to be imported into our favourite spreadsheet!
 
 ~~~
-less mpps.csv
+cat output.csv
 ~~~
 {: .source}
+
+Returns
 
 ~~~
 email,name,phone
+bob.bailey@pc.ola.org,"Robert Bailey, MPP (Sarnia—Lambton)",416-325-1715
+ganderson.mpp.co@liberal.ola.org,"Granville Anderson, MPP (Durham)",416-325-5494
+ted.arnott@pc.ola.org,"Ted Arnott, MPP (Wellington—Halton Hills)",416-325-3880
 lalbanese.mpp@liberal.ola.org,"Hon Laura Albanese, MPP (York South—Weston)",416-325-6200
-vdhillon.mpp.co@liberal.ola.org,"Vic Dhillon, MPP (Brampton West)",416-325-0241
-jdickson.mpp@liberal.ola.org,"Joe Dickson, MPP (Ajax—Pickering)",416-327-0653
-sdelduca.mpp.co@liberal.ola.org,"Hon Steven Del Duca, MPP (Vaughan)",416-327-9200
-(...)
+tarmstrong-qp@ndp.on.ca,"Teresa J. Armstrong, MPP (London—Fanshawe)",416-325-1872
 ~~~
 {: .output}
 
-By changing the file extension, we can also export it as JSON or XML:
-
-~~~
-scrapy crawl getemails -o mpps.xml
-~~~
-{: .source}
-
+By changing the file extension to `.json` or `.xml` we can output the same data
+in JSON or XML format.
 Refer to the [Scrapy documentation](http://doc.scrapy.org/en/latest/topics/feed-exports.html#topics-feed-exports)
 for a full list of supported formats.
 
+Now that everything looks to be in place, we can finally remove our limit to the number
+of scraped elements...
+
+(editing `ontariompps/ontariompps/spiders/mppaddresses.py`)
+
+~~~
+import scrapy
+from ontariompps.items import OntariomppsItem # We need this so that Python knows about the item object
+
+class MppaddressesSpider(scrapy.Spider):
+    name = "mppaddresses" # The name of this spider
+    
+    # The allowed domain and the URLs where the spider should start crawling:
+    allowed_domains = ["www.ontla.on.ca"]
+    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
+
+    def parse(self, response):
+		# The main method of the spider. It scrapes the URL(s) specified in the
+        # 'start_url' argument above. The content of the scraped URL is passed on
+		# as the 'response' object.
+        for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
+            # This loops through all the URLs found inside an element of class 'mppcell'
+            
+            # Constructs an absolute URL by combining the response’s URL with a possible relative URL:
+            full_url = response.urljoin(url)
+            print("Found URL: "+full_url)
+            
+            # The following tells Scrapy to scrape the URL in the 'full_url' variable
+            # and calls the 'get_details() method below with the content of this
+            # URL:
+            yield scrapy.Request(full_url, callback=self.get_details)
+    
+    def get_details(self, response):
+		# This method is called on by the 'parse' method above. It scrapes the URLs
+        # that have been extracted in the previous step.
+        
+        item = OntariomppsItem() # Creating a new Item object
+        # Store scraped data into that item:
+        item['name'] = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract_first()
+        item['phone'] = response.xpath("normalize-space(//div[@class='phone']/text())").extract_first()
+        item['email'] = response.xpath("normalize-space(//div[@class='email']/a/text())").extract_first()
+	    
+        # Return that item to the main spider method:
+        yield item
+~~~
+{: .source}
+
+(we've removed the `[:5]` at the end of the for loop on line 16 of the above code)
+
+... and run our spider one last time:
+
+~~~
+scrapy crawl mppaddresses -o mppaddresses.csv
+~~~
+{: .source}
 
 > ## Add other data elements to the spider
 >
@@ -1080,8 +1184,10 @@ for a full list of supported formats.
 >
 {: .challenge}
 
-FIXME: more challenges, conclusion
-FIXME: add more explanations about structure of Scrapy project, how it works, different elements.
-FIXME: add brief description of classes and objects
+You are now ready to write your own spiders!
 
-![Scrapy architecture overview](https://doc.scrapy.org/en/latest/_images/scrapy_architecture_02.png)
+# Reference
+
+* [Scrapy documentation](https://doc.scrapy.org/en/latest/index.html)
+
+
