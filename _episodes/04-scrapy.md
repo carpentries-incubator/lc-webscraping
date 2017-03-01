@@ -670,11 +670,17 @@ to get the "content" that the `selectors` are pointing to, the following methods
 |`re()`| Returns a list of unicode strings within the element(s) selected by the `selector` object by applying the regular expression given as argument.|
 |`re_first()`| Returns the first match of the regular expression|
 
-The important thing to remember is that `xpath()` and `css()` return `selector` objects, on which it
-is then possible to apply the `xpath()` and `css()` methods a second time in order to further refine
-a query. Whereas `re()` returns a list of strings, and therefore it is no longer possible to apply
-`xpath()` or `css()` to the results of `re()`.
-
+> ## Know when to use `extract()`
+> The important thing to remember is that `xpath()` and `css()` return `selector` objects, on which it
+> is then possible to apply the `xpath()` and `css()` methods a second time in order to further refine
+> a query. Once you've reached the elements you're interested in, you need to call `extract()` or
+> `extract_first()` to get to their contents as string(s).
+> 
+> Whereas `re()` returns a list of strings, and therefore it is no longer possible to apply
+> `xpath()` or `css()` to the results of `re()`. Since it returns a string, you don't need to
+> use `extract()` there.
+> 
+{: .callout}
 
 Since we have an XPath query we know will extract the URLs we are looking for, we can now use
 the `xpath()` method and update the spider accordingly:
