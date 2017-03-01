@@ -651,15 +651,30 @@ returns
 ## Extracting URLs using the spider
 
 Armed with the correct query, we can now update our spider accordingly. The `parse`
-methods returns the contents of the scraped page inside the `response` object. That response
-objects supports a variety of methods to act on its contents:
+methods returns the contents of the scraped page inside the `response` object. The `response`
+object supports a variety of methods to act on its contents:
 
 |Method|Description|
 |-----------------|:-------------|
-|`xpath()`| Returns a list of objects, each of which contains the nodes selected by the XPath query given as argument|
+|`xpath()`| Returns a list of selectors, each of which points to the nodes selected by the XPath query given as argument|
 |`css()`| Works similarly to the `xpath()` method, but uses CSS expressions to select elements.|
-|`extract()`| Returns the entire text content of the response object, as a unicode string.|
-|`re()`| Returns a list of unicode strings extracted by applying the regular expression given as argument.|
+
+Those methods will return objects of a different type, called `selectors`. As their name implies,
+these objects are "pointers" to the elements we are looking for inside the scraped page. In order
+to get the "content" that the `selectors` are pointing to, the following methods should be used:
+
+|Method|Description|
+|-----------------|:-------------|
+|`extract()`| Returns the entire contents of the element(s) selected by the `selector` object, as a list of strings.|
+|`extract_first()`| Returns the content of the first element selected by the `selector` object.|
+|`re()`| Returns a list of unicode strings within the element(s) selected by the `selector` object by applying the regular expression given as argument.|
+|`re_first()`| Returns the first match of the regular expression|
+
+The important thing to remember is that `xpath()` and `css()` return `selector` objects, on which it
+is then possible to apply the `xpath()` and `css()` methods a second time in order to further refine
+a query. Whereas `re()` returns a list of strings, and therefore it is no longer possible to apply
+`xpath()` or `css()` to the results of `re()`.
+
 
 Since we have an XPath query we know will extract the URLs we are looking for, we can now use
 the `xpath()` method and update the spider accordingly:
@@ -934,6 +949,48 @@ in writing more precise queries to make sure we are collecting the right informa
 > {: .solution}
 >
 {: .challenge}
+
+> ## Scraping using Regular Expressions
+> In combination with XPath queries, it is also possible to use [Regular Expressions](https://en.wikipedia.org/wiki/Regular_expression)
+> to scrape the contents of a web page.
+>
+> This is done by using the `re()` method. That method behaves a bit differently
+> than the `xpath()` method in that it has to be applied on a `selector` object
+> and returns an array of unicode strings (it is therefore not necessary to
+> use `extract()` on its results).
+>
+> Using the Scrapy shell, try writing a query that selects all phone numbers found on
+> a politician's detail page regardless of where they are located, using Regular Expressions.
+>
+> You might find the [Regex 101](https://regex101.com/) interactive Regular Expressions
+> tester useful to get to the proper syntax.
+>
+> Tips:
+>
+> * We are looking for phone numbers following the North American syntax: ###-###-####
+> * `re()` expects a regular expression string which should be prefixed by `r` as in `re(r'Name:\s*(.*)')`.
+> * Remember that `re()` is run on a `selector` object, so you can't do `response.re(r'...')`. Instead you may
+>   want to try doing something like `response.xpath('//body').re(r'...')`.
+>
+> > ## Solution
+> >
+> > This returns an array of phone (and fax) numbers (using the Scrapy shell):
+> >
+> > ~~~
+> > scrapy shell "http://www.ontla.on.ca/web/members/members_detail.do?locale=en&ID=7085"
+> > >>> response.xpath('//body').re(r'\d{3}-\d{3}-\d{4}')
+> > ~~~
+> > {: .source}
+> >
+> > ~~~
+> > ['416-325-6200', '416-325-6195', '416-243-7984', '416-243-0327']
+> > ~~~
+> > {: .output}
+> >
+> {: .solution}
+>
+{: .challenge}
+
 
 Once we have found XPath queries to run on the detail pages and are happy with the result,
 we can add them to the `get_details()` method of our spider:
