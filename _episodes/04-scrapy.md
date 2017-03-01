@@ -216,12 +216,12 @@ import scrapy
 class MppaddressesSpider(scrapy.Spider):
     name = "mppaddresses"  # The name of this spider
 	
-	# The allowed domain and the URLs where the spider should start crawling:
+    # The allowed domain and the URLs where the spider should start crawling:
     allowed_domains = ["www.ontla.on.ca/web/members/members_current.do?locale=en"]
     start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
-
-	# And a 'parse' function, which is the main method of the spider. The content of the scraped
-	# URL is passed on as the 'response' object:
+	
+    # And a 'parse' function, which is the main method of the spider. The content of the scraped
+    # URL is passed on as the 'response' object:
     def parse(self, response):
         pass
 ~~~
@@ -230,7 +230,7 @@ class MppaddressesSpider(scrapy.Spider):
 Note that here some comments have been added for extra clarity, they will not be there upon
 first creating a spider.
 
-> ## Don't include http:// when running `scrapy genspider`
+> ## Don't include `http://` when running `scrapy genspider`
 >
 > The current version of Scrapy (1.3.2 - February 2017) apparently only expects URLs without
 > `http://` when running `scrapy genspider`. If you do include the `http` prefix, you might
@@ -398,7 +398,6 @@ Let's change that by editing the spider as follows (note the contents of the `pa
 
 ~~~
 import scrapy
-
 
 class MppaddressesSpider(scrapy.Spider):
     name = "mppaddresses"
@@ -693,7 +692,7 @@ import scrapy
 class MppaddressesSpider(scrapy.Spider):
     name = "mppaddresses"
     allowed_domains = ["www.ontla.on.ca"]
-	start\_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
+    start\_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
     def parse(self, response):
         for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
@@ -773,14 +772,14 @@ of our project by successfully extracing all URLs leading to the minister profil
 > ~~~
 > import scrapy
 > 
->	class MppaddressesSpider(scrapy.Spider):
->		name = "mppaddresses"
->		allowed_domains = ["www.ontla.on.ca"]
->	    start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
+>    class MppaddressesSpider(scrapy.Spider):
+>        name = "mppaddresses"
+>        allowed_domains = ["www.ontla.on.ca"]
+>        start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 >
->	    def parse(self, response):
->	        for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
->	            print(response.urljoin(url))
+>        def parse(self, response):
+>            for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+>                print(response.urljoin(url))
 > ~~~
 > {: .source}
 >
@@ -810,26 +809,26 @@ class MppaddressesSpider(scrapy.Spider):
     start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
     def parse(self, response):
-		# The main method of the spider. It scrapes the URL(s) specified in the
-		# 'start_url' argument above. The content of the scraped URL is passed on
-		# as the 'response' object.
+        # The main method of the spider. It scrapes the URL(s) specified in the
+        # 'start_url' argument above. The content of the scraped URL is passed on
+        # as the 'response' object.
         
-		for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
-			# This loops through all the URLs found inside an element of class 'mppcell'
+        for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+            # This loops through all the URLs found inside an element of class 'mppcell'
 			
-			# Constructs an absolute URL by combining the response’s URL with a possible relative URL:
-			full_url = response.urljoin(url)
-			print("Found URL: "+full_url)
+            # Constructs an absolute URL by combining the response’s URL with a possible relative URL:
+            full_url = response.urljoin(url)
+            print("Found URL: "+full_url)
             
-			# The following tells Scrapy to scrape the URL in the 'full_url' variable
-			# and calls the 'get_details() method below with the content of this
-			# URL:
-			yield scrapy.Request(full_url, callback=self.get_details)
+            # The following tells Scrapy to scrape the URL in the 'full_url' variable
+            # and calls the 'get_details() method below with the content of this
+            # URL:
+            yield scrapy.Request(full_url, callback=self.get_details)
     
-	def get_details(self, response):
-		# This method is called on by the 'parse' method above. It scrapes the URLs
-		# that have been extracted in the previous step.
-		print("Visited URL: "+response.url)
+    def get_details(self, response):
+        # This method is called on by the 'parse' method above. It scrapes the URLs
+        # that have been extracted in the previous step.
+        print("Visited URL: "+response.url)
 ~~~
 {: .source}
 
@@ -1015,29 +1014,29 @@ class MppaddressesSpider(scrapy.Spider):
     start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
     def parse(self, response):
-		# The main method of the spider. It scrapes the URL(s) specified in the
-		# 'start_url' argument above. The content of the scraped URL is passed on
-		# as the 'response' object.
+        # The main method of the spider. It scrapes the URL(s) specified in the
+        # 'start_url' argument above. The content of the scraped URL is passed on
+        # as the 'response' object.
         
-		for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
-			# This loops through all the URLs found inside an element of class 'mppcell'
+        for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
+            # This loops through all the URLs found inside an element of class 'mppcell'
 			
-			# Constructs an absolute URL by combining the response’s URL with a possible relative URL:
-			full_url = response.urljoin(url)
-			print("Found URL: "+full_url)
+            # Constructs an absolute URL by combining the response’s URL with a possible relative URL:
+            full_url = response.urljoin(url)
+            print("Found URL: "+full_url)
             
-			# The following tells Scrapy to scrape the URL in the 'full_url' variable
-			# and calls the 'get_details() method below with the content of this
-			# URL:
-			yield scrapy.Request(full_url, callback=self.get_details)
+            # The following tells Scrapy to scrape the URL in the 'full_url' variable
+            # and calls the 'get_details() method below with the content of this
+            # URL:
+            yield scrapy.Request(full_url, callback=self.get_details)
     
-	def get_details(self, response):
-		# This method is called on by the 'parse' method above. It scrapes the URLs
-		# that have been extracted in the previous step.
-		name_detail = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract_first()
-		phone_detail = response.xpath("normalize-space(//div[@class='phone']/text())").extract_first()
-		email_detail = response.xpath("normalize-space(//div[@class='email']/a/text())").extract_first()
-		print("Found details: " + name_detail + ', ' + phone_detail + ', ' + email_detail)
+    def get_details(self, response):
+        # This method is called on by the 'parse' method above. It scrapes the URLs
+        # that have been extracted in the previous step.
+        name_detail = response.xpath("normalize-space(//div[@class='mppdetails']/h1/text())").extract_first()
+        phone_detail = response.xpath("normalize-space(//div[@class='phone']/text())").extract_first()
+        email_detail = response.xpath("normalize-space(//div[@class='email']/a/text())").extract_first()
+        print("Found details: " + name_detail + ', ' + phone_detail + ', ' + email_detail)
 ~~~
 {: .source}
 
@@ -1104,7 +1103,7 @@ class OntariomppsItem(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()
     phone = scrapy.Field()
-	email = scrapy.Field()
+    email = scrapy.Field()
 ~~~
 {: .source}
 
@@ -1124,23 +1123,24 @@ class MppaddressesSpider(scrapy.Spider):
     start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
     def parse(self, response):
-		# The main method of the spider. It scrapes the URL(s) specified in the
+        # The main method of the spider. It scrapes the URL(s) specified in the
         # 'start_url' argument above. The content of the scraped URL is passed on
-		# as the 'response' object.
+        # as the 'response' object.
+		
         for url in response.xpath("//*[@class='mppcell']/a/@href").extract()[:5]:
             # This loops through all the URLs found inside an element of class 'mppcell'
             
             # Constructs an absolute URL by combining the response’s URL with a possible relative URL:
             full_url = response.urljoin(url)
             print("Found URL: "+full_url)
-            
+			
             # The following tells Scrapy to scrape the URL in the 'full_url' variable
             # and calls the 'get_details() method below with the content of this
             # URL:
             yield scrapy.Request(full_url, callback=self.get_details)
     
     def get_details(self, response):
-		# This method is called on by the 'parse' method above. It scrapes the URLs
+        # This method is called on by the 'parse' method above. It scrapes the URLs
         # that have been extracted in the previous step.
         
         item = OntariomppsItem() # Creating a new Item object
@@ -1243,9 +1243,9 @@ class MppaddressesSpider(scrapy.Spider):
     start_urls = ['http://www.ontla.on.ca/web/members/members_current.do?locale=en/']
 
     def parse(self, response):
-		# The main method of the spider. It scrapes the URL(s) specified in the
+        # The main method of the spider. It scrapes the URL(s) specified in the
         # 'start_url' argument above. The content of the scraped URL is passed on
-		# as the 'response' object.
+        # as the 'response' object.
         for url in response.xpath("//*[@class='mppcell']/a/@href").extract():
             # This loops through all the URLs found inside an element of class 'mppcell'
             
@@ -1259,7 +1259,7 @@ class MppaddressesSpider(scrapy.Spider):
             yield scrapy.Request(full_url, callback=self.get_details)
     
     def get_details(self, response):
-		# This method is called on by the 'parse' method above. It scrapes the URLs
+        # This method is called on by the 'parse' method above. It scrapes the URLs
         # that have been extracted in the previous step.
         
         item = OntariomppsItem() # Creating a new Item object
