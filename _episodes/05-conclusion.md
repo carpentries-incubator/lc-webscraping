@@ -1,13 +1,21 @@
 ---
-title: "COMING SOON: Conclusion"
+title: "Conclusion"
 teaching: 15
 exercises: 15
 questions:
-- "What are the legal implications of web scraping?"
+- "When is web scraping OK and when is it not?"
+- "Is web scraping legal? Can I get into trouble?"
+- "How can I make sure I'm doing the right thing?"
+- "What can I do with the data that I've scraped?"
+- "Can password-protected websites be scraped?"
 objectives:
 - "Wrap things up"
+- "Discuss the legal implications of web scraping"
+- "Establish a code of conduct"
 keypoints:
-- "FIXME"
+- "Web scraping is, in general, legal and won't get you into trouble."
+- "There are a few things to be careful about, notably don't overwhelm a web server and don't steal content."
+- "Be nice. In doubt, ask."
 ---
 
 Now that we have seen several different ways to scrape data from websites and are
@@ -15,7 +23,9 @@ ready to start working on potentially larger projects, we may ask ourselves whet
 there are any legal implications of writing a piece of computer code that downloads
 information from the Internet.
 
-## Legal aspects
+In this section, we will be discussing some of the issues to be aware of when
+scraping websites, and we will establish a [code of conduct (below)](#web-scraping-code-of-conduct)
+to guide our web scraping projects.
 
 > ## This section does not consitute legal advice
 > 
@@ -30,7 +40,38 @@ information from the Internet.
 >
 {: .callout}
 
-FIXME: add references to use cases and legal cases to illustrated the aspects below
+## Don't break the web: Denial of Service attacks
+
+The first and most important thing to be careful about when writing a web scraper is that
+it typically involves querying a website repeatedly and accessing a potentially large
+number of pages. For each of these pages, a request will be sent to the web server that
+is hosting the site, and the server will have to process the request and send a response
+back to the computer that is running our code. Each of these requests will consume resources
+on the server, during which it will not be doing something else, like for example responding
+to someone else trying to access the same site. 
+
+If we send too many such requests over a short span of time, we can prevent other "normal" users
+from accessing the site during that time, or even cause the server to run out of resources and crash.
+
+In fact, this is such an efficient way to disrupt a web site that hackers are often doing it on purpose.
+This is called a [Denial of Service (DoS) attack](#addlink).
+
+Since DoS attacks are unfortunately a common occurence on the Internet, modern web servers include
+measures to ward off such illegitimate use of their resources. They are watchful for large amounts
+of requests appearing to come from a single computer or IP address, and their first line of defense often involves
+refusing any further requests coming from this IP address.
+
+A web scraper, even one with legitimate purposes and no intent to bring a website down, can exhibit
+similar behaviour and, if we are not careful, result in our computer being banned from accessing
+a website.
+
+The good news is that a good web scraper, such as Scrapy, recognizes that this is a risk and includes
+measures to prevent our code from appearing to launch a DoS attack on a website. It does soo
+
+
+## Don't steal: Copyright and fair use
+
+
 
 The important thing to stress is that web scraping _can_ be illegal. If the terms
 and conditions of the web site we are scraping specifically prohibit downloading
@@ -66,10 +107,7 @@ e.g. competitor to eBay automatically placing bets
 e.g. extracting pricing data to set own prices
 "trespass to chattel"
 
-## Denial of Service attacks
 
-BUT even if legal, badly programmed scrapers can also bring down a website (Denial of Service attack).
-Test your code on small dataset first.
 
 ## Web scraping code of conduct
 
@@ -89,7 +127,7 @@ be fine.
    investigating something like that.
 3. __Check your local legislation.__ For example, certain countries have laws protecting
    personal information such as email addresses and phone numbers. Scraping such information,
-   even from publicly avaialable web sites, can be illegal (e.g. Australia).
+   even from publicly avaialable web sites, can be illegal (e.g. in Australia).
 4. __Don't share downloaded content illegally.__ Scraping for personal purposes is usually
    OK, even if it is copyrighted information, as it could fall under the fair use provision
    of the intellectual property legislation. However, sharing data for which you don't
@@ -103,7 +141,7 @@ be fine.
    requests per second. If you are writing a recursive scraper (i.e. that follows
    hyperlinks), test it on a smaller dataset first to make sure it does what it is
    supposed to do. Adjust the settings of your scraper to allow for a delay between
-   requests.
+   requests. By default, Scrapy uses conservative settings that should minimize this risk.
 7. __Publish your own data in a reusable way.__ Don't force others to write their own
    scrapers to get at your data. Use open and software-agnostic formats (e.g. JSON, XML),
    provide metadata (data about your data: where it came from, what it represents, how
