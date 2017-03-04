@@ -66,19 +66,30 @@ similar behaviour and, if we are not careful, result in our computer being banne
 a website.
 
 The good news is that a good web scraper, such as Scrapy, recognizes that this is a risk and includes
-measures to prevent our code from appearing to launch a DoS attack on a website. It does soo
+measures to prevent our code from appearing to launch a DoS attack on a website. This is mostly
+done by inserting a random delay between individual requests, which gives the target server enough
+time to handle requests from other users between ours. 
 
+This is Scrapy's default behaviour, and it should prevent most scraping projects from ever causing problems.
+To be on the safe side, however, it is good practice to limit the number of pages we are scraping
+while we are still writing and debugging our code. This is why in the previous section, we imposed
+a limit of five pages to be scraped, which we only removed when we were reasonably certain the scraper
+was working as it should.
+
+Limiting requests to a particular domain, by using Scrapy's `allowed_domains` property is another
+way to make sure our code is not going to start scraping the entire Internet by mistake.
+
+Thanks to the defenses web servers use to protect themselves against DoS attacks and Scrapy's
+measure to avoid inadvertently launching such an attack, the risks of causing trouble is limited.
 
 ## Don't steal: Copyright and fair use
 
-
-
-The important thing to stress is that web scraping _can_ be illegal. If the terms
+It is important to recognize that in certain circumstances web scraping _can_ be illegal. If the terms
 and conditions of the web site we are scraping specifically prohibit downloading
 and copying its content, then we could be in trouble for scraping it.
 
 In practice, however, web scraping is a tolerated practice, provided reasonable
-care is taken not to disrupt the "regular" use of a web site.
+care is taken not to disrupt the "regular" use of a web site, as we have seen above.
 
 In a sense, web scraping is no different than using a web browser to visit a web page,
 in that it amounts to using computer software (a browser vs a scraper) to acccess
@@ -86,28 +97,40 @@ data that is publicly available on the web.
 
 In general, if data is publicly available (the content that is being scraped is not
 behind a password-protected authentication system), then it is OK to scrape it,
-provided we don't break the web site doing so (see below). What is potentially
-problematic is if the scraped data will be shared further.
+provided we don't break the web site doing so. What is potentially
+problematic is if the scraped data will be shared further. For example, downloading
+content off one website and posting it on another website (as our own), unless
+explicitely permitted, would constitute copyright violation and be illegal.
 
+However, most copyright legislations recognize cases in which reusing some, possibly
+copyrighted, information in an aggregate or derivative format is considered
+"fair use". In general, unless the intent is to pass off data as our own, copy
+it word for word or trying to make money out of it, reusing publicly available
+content scraped off the internet is OK.
 
-Usually OK if public data (e.g. government data)
+### Better be safe than sorry
+Be aware that copyright and data privacy legislation typically differs from country
+to country. Be sure to check the laws that apply in your context. For example, in Australia,
+it can be illegal to scrape and store personal information such as names, phone
+numbers and email addresses, even if they are publicly available.
+
+If you are looking to scrape data for your own personal use, then the above
+guidelines should probably be all that you need to worry about. However,
+if you plan to start harvesting a large amount of data for research
+or commercial purposes, you should probably seek legal advice first.
+
+If you work in a university, chances are it has a copyright office that
+will help you sort out the legal aspects of your project. The
+university library is often the best place to start looking for help on
+copyright.
+
+## Remember to ask
 
 Usually OK for personal consumption. Good practice to contact data owners/curators if aim to use it for institutional purposes
 - You might receive data already structured
 - Clarifies right to share extracted data
 
 Unfortunatly, not all data curators will be sensible to this.
-
-Don't download copies of documents that are clearly not public (c.f. SciHub...)
-Content theft is illegal
-Generally safe if not for commercial intent.
-
-Case law evolving in the US, cases where scraping was declared illegal involved commercial aspects
-e.g. competitor to eBay automatically placing bets
-e.g. extracting pricing data to set own prices
-"trespass to chattel"
-
-
 
 ## Web scraping code of conduct
 
@@ -147,6 +170,8 @@ be fine.
    provide metadata (data about your data: where it came from, what it represents, how
    to use it, etc.) and make sure it can be indexed by search engines so that people can
    find it.
+
+
 
 
 
