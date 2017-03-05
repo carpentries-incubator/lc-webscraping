@@ -24,6 +24,8 @@ Note: Using '!=' is not the same as using 'not'.
 
 ### Predicates
 
+| Operator   | Explanation |
+|-----------------|:-------------|
 | ```[1]```  |Select the first node|
 | ```[last()]```  |Select the last node|
 | ```[last()-1]```  |Select the last but one node (also known as the second last node)|
