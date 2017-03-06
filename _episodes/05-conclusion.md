@@ -188,7 +188,7 @@ for details.
 Happy scraping!
 
 
-#References
+# References
 
 * The [Web scraping Wikipedia page](https://en.wikipedia.org/wiki/Web_scraping) has a concise
   definition of many concepts discussed here.
