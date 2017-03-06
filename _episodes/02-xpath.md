@@ -97,6 +97,50 @@ as XQuery would be used instead.
 
 Now let's start using XPath.
 
+## Navigating through the HTML node tree using XPath
+
+A popular way to represent the structure of an XML or HTML document is the _node tree_:
+
+![HTML Node Tree](http://www.w3schools.com/js/pic_htmltree.gif)
+
+In an HTML document, everything is a node:
+
+* The entire document is a document node
+* Every HTML element is an element node
+* The text inside HTML elements are text nodes
+
+The nodes in such a tree have a hierarchical relationship to each other. We use the terms _parent_, _child_ and
+_sibling_ to describe these relationships:
+
+* In a node tree, the top node is called the *root* (or *root node*)
+* Every node has exactly one *parent*, except the root (which has no parent)
+* A node can have zero, one or several *children*
+* *Siblings* are nodes with the same parent
+* The sequence of connections from node to node is called a *path*
+
+![Node relationships](http://www.w3schools.com/js/pic_navigate.gif)
+
+Paths in XPath are defined using slashes (`/`) to separate the steps in a node connection sequence, much like
+URLs or Unix directories.
+
+In XPath, all expressions are evaluated based on a *context node*. The context node is the node in which a path
+starts from. The default context is the root node, indicated by a single slash (/), as in the example above.
+
+The most useful path expressions are listed below:
+
+| Expression   | Description |
+|-----------------|:-------------|
+| ```nodename```| Select all nodes with the name "nodename"   |
+| ```/```  | A beginning single slash indicates a select from the root node, subsequent slashes indicate selecting a child node from current node  |
+| ```//``` | Select direct and indirect child nodes in the document from the current node - this gives us the ability to "skip levels" |
+| ```.```       | Select the current context node   |
+|```..```  | Select the parent of the context node|
+|```@```  | Select attributes of the context node|
+|```[@attribute = 'value']```   |Select nodes with a particular attribute value|
+|`text()`| Select the text content of a node|
+| &#124;|Pipe chains expressions and brings back results from either expression, think of a set union |
+
+
 ## Navigating through a webpage with XPath using a browser console
 
 We will use the HTML code that describes this very page you are reading as an example. By default, a web browser
@@ -221,49 +265,6 @@ Using this syntax, XPath thus allows us to determine the exact _path_ to a node.
 Before we look into other
 ways to reach a specific HTML node using XPath, let's start by looking closer at how nodes are arranged
 within a document and what their relationships with each others are.
-
-## Navigating through the HTML node tree using XPath
-
-A popular way to represent the structure of an XML or HTML document is the _node tree_:
-
-![HTML Node Tree](http://www.w3schools.com/js/pic_htmltree.gif)
-
-In an HTML document, everything is a node:
-
-* The entire document is a document node
-* Every HTML element is an element node
-* The text inside HTML elements are text nodes
-
-The nodes in such a tree have a hierarchical relationship to each other. We use the terms _parent_, _child_ and
-_sibling_ to describe these relationships:
-
-* In a node tree, the top node is called the *root* (or *root node*)
-* Every node has exactly one *parent*, except the root (which has no parent)
-* A node can have zero, one or several *children*
-* *Siblings* are nodes with the same parent
-* The sequence of connections from node to node is called a *path*
-
-![Node relationships](http://www.w3schools.com/js/pic_navigate.gif)
-
-Paths in XPath are defined using slashes (`/`) to separate the steps in a node connection sequence, much like
-URLs or Unix directories.
-
-In XPath, all expressions are evaluated based on a *context node*. The context node is the node in which a path
-starts from. The default context is the root node, indicated by a single slash (/), as in the example above.
-
-The most useful path expressions are listed below:
-
-| Expression   | Description |
-|-----------------|:-------------|
-| ```nodename```| Select all nodes with the name "nodename"   |
-| ```/```  | A beginning single slash indicates a select from the root node, subsequent slashes indicate selecting a child node from current node  |
-| ```//``` | Select direct and indirect child nodes in the document from the current node - this gives us the ability to "skip levels" |
-| ```.```       | Select the current context node   |
-|```..```  | Select the parent of the context node|
-|```@```  | Select attributes of the context node|
-|```[@attribute = 'value']```   |Select nodes with a particular attribute value|
-|`text()`| Select the text content of a node|
-| &#124;|Pipe chains expressions and brings back results from either expression, think of a set union |
 
 
 For example, to select all the `blockquote` nodes of this page, we can write
