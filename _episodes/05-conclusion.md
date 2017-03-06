@@ -7,7 +7,6 @@ questions:
 - "Is web scraping legal? Can I get into trouble?"
 - "How can I make sure I'm doing the right thing?"
 - "What can I do with the data that I've scraped?"
-- "Can password-protected websites be scraped?"
 objectives:
 - "Wrap things up"
 - "Discuss the legal implications of web scraping"
@@ -54,7 +53,7 @@ If we send too many such requests over a short span of time, we can prevent othe
 from accessing the site during that time, or even cause the server to run out of resources and crash.
 
 In fact, this is such an efficient way to disrupt a web site that hackers are often doing it on purpose.
-This is called a [Denial of Service (DoS) attack](#addlink).
+This is called a [Denial of Service (DoS) attack](https://en.wikipedia.org/wiki/Denial-of-service_attack).
 
 Since DoS attacks are unfortunately a common occurence on the Internet, modern web servers include
 measures to ward off such illegitimate use of their resources. They are watchful for large amounts
@@ -124,13 +123,21 @@ will help you sort out the legal aspects of your project. The
 university library is often the best place to start looking for help on
 copyright.
 
-## Remember to ask
+## Be nice: ask and share
 
-Usually OK for personal consumption. Good practice to contact data owners/curators if aim to use it for institutional purposes
-- You might receive data already structured
-- Clarifies right to share extracted data
+Depending on the scope of your project, it might be worthwhile to consider asking
+the owners or curators of the data you are planning to scrape if they have it
+already available in a structured format that could suit your project. If your
+aim is do use their data for research, or to use it in a way that could potentially
+interest them, not only it could save you the trouble of writing a
+web scraper, but it could also help clarify straight away what you can and cannot do
+with the data.
 
-Unfortunatly, not all data curators will be sensible to this.
+On the other hand, when you are publishing your own data, as part of a research project,
+documentation or a public website, you might want to think about whether someone might
+be interested in getting your data for their own project. If you can, try to provide
+others with a way to download your raw data in a structured format, and thus save
+them the trouble to try and scrape your own pages!
 
 ## Web scraping code of conduct
 
@@ -171,26 +178,36 @@ be fine.
    to use it, etc.) and make sure it can be indexed by search engines so that people can
    find it.
 
+## Going further
+
+This lesson only provides an introduction to the practice of web scraping and highlights
+some of the tools available. Scrapy has many more features than those mentioned in the
+previous section, be sure to refer to its [full documentation](https://doc.scrapy.org/en/latest/)
+for details.
+
+Happy scraping!
 
 
+#References
 
-
-GOING FURTHER
-HTTP-authentication is supported by many frameworks, allows for scraping of protected data
-	Warning about legal aspects!
-There are frameworks that reproduce the workings of a web browser (e.g. PhantomJS)
-
-
-
-
-
-	
-
-
-
-References:
-- https://en.wikipedia.org/wiki/Web_scraping
-- http://blog.rubyroidlabs.com/2016/04/web-scraping-1/
-- http://schoolofdata.org/handbook/courses/scraping/
-- http://schoolofdata.org/handbook/recipes/scraper-extension-for-chrome/
-- http://doc.scrapy.org/en/1.1/intro/tutorial.html
+* The [Web scraping Wikipedia page](https://en.wikipedia.org/wiki/Web_scraping) has a concise
+  definition of many concepts discussed here.
+* The [School of Data Handbook](http://schoolofdata.org/handbook/courses/scraping/) has a
+  short introduction to web scraping, with links to resources e.g. for data journalists.
+* [This blog](https://blog.rubyroidlabs.com/2016/04/web-scraping-1/) has a discussion on
+  the legal aspects of web scraping.
+* [This case study](http://naelshiab.com/members-parliament-web-scraping/) is a great example
+  of what can be done using web scraping and how to achieve it.
+* [Scrapy documentation](https://doc.scrapy.org/en/latest/)
+* [morph.io](https://morph.io/) is a cloud-based web scraping platform that supports multiple
+  frameworks, interacts with GitHub and provides a built-in way to save and share extracted
+  data.
+* [import.io](https://www.import.io/) is a commercial web-based scraping service that requires
+  little coding.
+* [Software Carpentry](https://software-carpentry.org/) is a non-profit organisation that
+  runs learn-to-code workshops worldwide. All lessons are publicly available and can be
+  followed indepentently. This lesson is heavily inspired by Software Carpentry.
+* [Data Carpentry](http://www.datacarpentry.org/) is a sister organisation of Software Carpentry
+  focused on the fundamental data management skills required to conduct research.
+* [Library Carpentry](https://librarycarpentry.github.io/) is another Software Carpentry spinoff
+  focused on software skills for librarians.
