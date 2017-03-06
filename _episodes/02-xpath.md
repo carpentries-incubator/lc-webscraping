@@ -493,6 +493,7 @@ Predicates are always embedded in square brackets, and are meant to provide addi
 |-----------------|:-------------|
 |//h1[2]|Select 2nd h1|
 |//h1[@id='references' or @id='introduction']|Select h1 references or introduction|
+
 <!--
 Note: '!=' != 'not', for instance in this snippet
 
