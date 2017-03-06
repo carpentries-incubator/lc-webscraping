@@ -97,6 +97,50 @@ as XQuery would be used instead.
 
 Now let's start using XPath.
 
+## Navigating through the HTML node tree using XPath
+
+A popular way to represent the structure of an XML or HTML document is the _node tree_:
+
+![HTML Node Tree](http://www.w3schools.com/js/pic_htmltree.gif)
+
+In an HTML document, everything is a node:
+
+* The entire document is a document node
+* Every HTML element is an element node
+* The text inside HTML elements are text nodes
+
+The nodes in such a tree have a hierarchical relationship to each other. We use the terms _parent_, _child_ and
+_sibling_ to describe these relationships:
+
+* In a node tree, the top node is called the *root* (or *root node*)
+* Every node has exactly one *parent*, except the root (which has no parent)
+* A node can have zero, one or several *children*
+* *Siblings* are nodes with the same parent
+* The sequence of connections from node to node is called a *path*
+
+![Node relationships](http://www.w3schools.com/js/pic_navigate.gif)
+
+Paths in XPath are defined using slashes (`/`) to separate the steps in a node connection sequence, much like
+URLs or Unix directories.
+
+In XPath, all expressions are evaluated based on a *context node*. The context node is the node in which a path
+starts from. The default context is the root node, indicated by a single slash (/), as in the example above.
+
+The most useful path expressions are listed below:
+
+| Expression   | Description |
+|-----------------|:-------------|
+| ```nodename```| Select all nodes with the name "nodename"   |
+| ```/```  | A beginning single slash indicates a select from the root node, subsequent slashes indicate selecting a child node from current node  |
+| ```//``` | Select direct and indirect child nodes in the document from the current node - this gives us the ability to "skip levels" |
+| ```.```       | Select the current context node   |
+|```..```  | Select the parent of the context node|
+|```@```  | Select attributes of the context node|
+|```[@attribute = 'value']```   |Select nodes with a particular attribute value|
+|`text()`| Select the text content of a node|
+| &#124;|Pipe chains expressions and brings back results from either expression, think of a set union |
+
+
 ## Navigating through a webpage with XPath using a browser console
 
 We will use the HTML code that describes this very page you are reading as an example. By default, a web browser
@@ -221,49 +265,6 @@ Using this syntax, XPath thus allows us to determine the exact _path_ to a node.
 Before we look into other
 ways to reach a specific HTML node using XPath, let's start by looking closer at how nodes are arranged
 within a document and what their relationships with each others are.
-
-## Navigating through the HTML node tree using XPath
-
-A popular way to represent the structure of an XML or HTML document is the _node tree_:
-
-![HTML Node Tree](http://www.w3schools.com/js/pic_htmltree.gif)
-
-In an HTML document, everything is a node:
-
-* The entire document is a document node
-* Every HTML element is an element node
-* The text inside HTML elements are text nodes
-
-The nodes in such a tree have a hierarchical relationship to each other. We use the terms _parent_, _child_ and
-_sibling_ to describe these relationships:
-
-* In a node tree, the top node is called the *root* (or *root node*)
-* Every node has exactly one *parent*, except the root (which has no parent)
-* A node can have zero, one or several *children*
-* *Siblings* are nodes with the same parent
-* The sequence of connections from node to node is called a *path*
-
-![Node relationships](http://www.w3schools.com/js/pic_navigate.gif)
-
-Paths in XPath are defined using slashes (`/`) to separate the steps in a node connection sequence, much like
-URLs or Unix directories.
-
-In XPath, all expressions are evaluated based on a *context node*. The context node is the node in which a path
-starts from. The default context is the root node, indicated by a single slash (/), as in the example above.
-
-The most useful path expressions are listed below:
-
-| Expression   | Description |
-|-----------------|:-------------|
-| ```nodename```| Select all nodes with the name "nodename"   |
-| ```/```  | A beginning single slash indicates a select from the root node, subsequent slashes indicate selecting a child node from current node  |
-| ```//``` | Select direct and indirect child nodes in the document from the current node - this gives us the ability to "skip levels" |
-| ```.```       | Select the current context node   |
-|```..```  | Select the parent of the context node|
-|```@```  | Select attributes of the context node|
-|```[@attribute = 'value']```   |Select nodes with a particular attribute value|
-|`text()`| Select the text content of a node|
-| &#124;|Pipe chains expressions and brings back results from either expression, think of a set union |
 
 
 For example, to select all the `blockquote` nodes of this page, we can write
@@ -462,17 +463,10 @@ Operators are used to compare nodes. There are mathematical operators, boolean o
 
 | Path Expression   | Expression Result |
 |-----------------|:-------------|
-|`/catalog/book/@category="WESTERN"`|Are any of the most popular books Westerns (category WESTERN)?|
-|`/catalog/book/price>80`|Are there any books over $80?|
+|html/body/div/h3/@id='exercises-2'|Does exercise 2 exist?|
+|html/body/div/h3/@id!='exercises-4'|Does exercise 4 not exist?|
+|//h1/@id='references' or @id='introduction'|Is there an h1 references or introduction?|
 
-
-### Exercises
-
-| Expression   | Result |
-|-----------------|:-------------|
-||Are any of the most popular books Sci-Fi (category SCIFI)?|
-||Are there any books in the Computer genre that are over $10 but under $50?|
-||I want to see the categories of all of the books but also the publish date. Hint: use the pipe|
 
 ## Predicates
 
@@ -480,9 +474,10 @@ Predicates are used to find a specific node or a node that contains a specific v
 
 Predicates are always embedded in square brackets, and are meant to provide additional filtering information to bring back nodes. You can filter on a node by using operators or functions.
 
+
 ### Examples
 
-| Expression   | Result |
+| Operator   | Explanation |
 |-----------------|:-------------|
 | ```[1]```  |Select the first node|
 | ```[last()]```  |Select the last node|
@@ -492,6 +487,14 @@ Predicates are always embedded in square brackets, and are meant to provide addi
 |```[@lang='en']```|	Select all the nodes that have a "attribute" attribute with a value of "en"|
 |```[price>15.00]```|	Select all nodes that have a price node with a value greater than 15.00|
 
+### Examples
+
+| Path Expression   | Expression Result |
+|-----------------|:-------------|
+|//h1[2]|Select 2nd h1|
+|//h1[@id='references' or @id='introduction']|Select h1 references or introduction|
+
+<!--
 Note: '!=' != 'not', for instance in this snippet
 
 ```xml
@@ -519,9 +522,12 @@ While ```[not(@id='bk101')]``` will bring back
 ```
 
 This is because != indicates the existence of an @id, whie the not() expression expresses to bring back everything except @id='bk101'
+-->
 
 
-##Wildcards
+
+
+## Wildcards
 
 XPath wildcards can be used to select unknown XML nodes.
 
@@ -532,29 +538,11 @@ XPath wildcards can be used to select unknown XML nodes.
 |```node()```|	Matches any node of any kind|
 
 
-
 ### Examples
 
-|Path Expression|	Result|
+|Path Expression|	Result|//*[@id="examples-2"]
 |-----------------|:-------------|
-|```/catalog/*```	|Select all the child element nodes of the catalog element|
-|```//*```	|Select all elements in the document|
-|```//title[@*]```	|Select all title elements which have at least one attribute of any kind|
-
-
-### Exercises
-
-|Path Expression|	Result|
-|-----------------|:-------------|
-|   ```//@*```    |What do you expect as your result?|
-|  |For all nodes that have the language attribute, select the immediate parent|
-||Select book nodes where the id attribute corresponds to "bk101"|
-||Select books that are either romance or fiction and are less than ten dollars. Hint: use `and` and `or`|
-||Select all the title elements of the book elements of the catalog element that have a price element with a value greater than 15.00|
-|```//title[@lang!="en"]```|What do you expect as your result?|
-|```//title[not(@lang="en")]```|What do you expect as your result?|
-|```/catalog/book[title[not(@lang='en')]][position()<4]/author/text()```|What do you expect as your result?|
-
+|```//*[@class='solution']```|Select all elements with class attribute 'solution'|
 
 
 ## In-text search
@@ -568,24 +556,13 @@ XPath can do in-text searching using functions and also supports regex with its 
 |```//author[ends-with(.,"w")]```|Matches on all author nodes, in current node ends with w (case-sensitive)|
 |```//author[matches(.,"Matt.*")]```| regular expressions match 2.0 |
 
+<!--
 ### Exercises
 
 | Expression   | Result |
 |-----------------|:-------------|
-||Match all publish date nodes, from January to May (Note: all dates are in yyyy-mm-dd format)|
-
-### Exercises
-
-Now try XPath with `xpath-xquery/data-menu/menu.xml`
-
-| Expression   | Result |
-|-----------------|:-------------|
-||I want to know all of the foods with a nutritional value of 800 calories and less than or equal to 200 grams of sugar|
-||I want to view the reviews of all foods with a review rating below 5 or are under $10|
-||I want to compare the corporate and review description of these foods|
-||I want to compare the cost of a food, the amount of sugar, and its review rating|
-||I want to find all foods that have Waffle in its name|
-
+|||
+-->
 
 ## Complete syntax: XPath Axes
 
@@ -602,11 +579,14 @@ XPath Axes fuller syntax of how to use XPath. Provides all of the different ways
 * following ‐‐ all following nodes in the document, excluding descendants
 * preceding ‐‐ all preceding nodes in the document, excluding ancestors • attribute ‐‐ the attributes of the context node
 
+[![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days](https://kimpham54.github.io/library-webscraping/fig/xpath-axes.jpg)]({{ page.root }}/fig/xpath-axes.jpg)
+
 
 |Path Expression|	Result|
 |-----------------|:-------------|
-|```/descendant::book```|Select all book element nodes|
-|```//attribute::lang```|Select all lang attribute nodes|
+|```/html/body/div/h1[@id='introduction']/following-sibling::h1```|Select all h1 following siblings of the h1 introduction|
+|```/html/body/div/h1[@id='introduction']/following-sibling::*```|Select all h1 following siblings|
+|```//attribute::id```|Select all id attribute nodes|
 
 Oftentimes, the elements we are looking for on a page have no ID attribute or
 other uniquely identifying features, so the next best thing is to aim for
@@ -622,6 +602,9 @@ Looking at the source code of the page, we see that that header is a `h2` elemen
 $x("//h2[@id='navigating-through-the-html-node-tree-using-xpath']/following-sibling::p[2]/img")
 ~~~
 {: .source}
+
+
+# Additions
 
 FIXME: add more XPath functions such as concat() and normalize-space().
 FIXME: mention [XPath Checker for Firefox](https://addons.mozilla.org/en-US/firefox/addon/xpath-checker/)
