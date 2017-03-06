@@ -527,7 +527,7 @@ This is because != indicates the existence of an @id, whie the not() expression 
 
 
 
-##Wildcards
+## Wildcards
 
 XPath wildcards can be used to select unknown XML nodes.
 
@@ -538,15 +538,11 @@ XPath wildcards can be used to select unknown XML nodes.
 |```node()```|	Matches any node of any kind|
 
 
-
-<!--
 ### Examples
 
 |Path Expression|	Result|
 |-----------------|:-------------|
-|||
-|||
--->
+|```//*[@class='solution']```|Select all elements with class attribute 'solution'|
 
 
 ## In-text search
@@ -583,12 +579,13 @@ XPath Axes fuller syntax of how to use XPath. Provides all of the different ways
 * following ‐‐ all following nodes in the document, excluding descendants
 * preceding ‐‐ all preceding nodes in the document, excluding ancestors • attribute ‐‐ the attributes of the context node
 
-[![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days](http://ptgmedia.pearsoncmg.com/images/chap3_0672323184/elementLinks/03fig05.jpg)]({{ page.root }}/fig/xpath-axes.jpg)
+[![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days]]({{ page.root }}/fig/xpath-axes.jpg)
 
 
 |Path Expression|	Result|
 |-----------------|:-------------|
 |```/html/body/div/h1[@id='introduction']/following-sibling::h1```|Select all h1 following siblings of the h1 introduction|
+|```/html/body/div/h1[@id='introduction']/following-sibling::*```|Select all h1 following siblings|
 |```//attribute::id```|Select all id attribute nodes|
 
 Oftentimes, the elements we are looking for on a page have no ID attribute or
