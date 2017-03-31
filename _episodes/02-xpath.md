@@ -25,7 +25,8 @@ some of the techniques that are required to indicate exactly what should be
 extracted from the web pages we aim to scrape.
 
 The material in this section was adapted from the [XPath and XQuery Tutorial](https://github.com/code4libtoronto/2016-07-28-librarycarpentrylessons/blob/master/xpath-xquery/lesson.md)
-written by Kim Pham for the July 2016 [Library Carpentry workshop](https://code4libtoronto.github.io/2016-07-28-librarycarpentry/) in Toronto.
+written by [Kim Pham](https://github.com/kimpham54) ([@tolloid](https://twitter.com/tolloid))
+for the July 2016 [Library Carpentry workshop](https://code4libtoronto.github.io/2016-07-28-librarycarpentry/) in Toronto.
 
 # Introduction
 XPath (which stands for XML Path Language) is an _expression language_ used to specify parts of an XML document.

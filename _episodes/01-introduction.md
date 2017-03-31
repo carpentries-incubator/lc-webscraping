@@ -4,20 +4,41 @@ teaching: 10
 exercises: 0
 questions:
 - "What is web scraping and why is it useful?"
+- "What are typical use cases for web scraping?"
 objectives:
 - "Introduce the concept of structured data"
 - "Discuss how data can be extracted from web pages"
+- "Introduce the examples that will be used in this lesson"
 keypoints:
 - "Humans are good at categorizing information, computers not so much."
 - "Often, data on a web site is not properly structured, making its extraction difficult."
 - "Web scraping is the process of automating the extraction of data from web sites."
 ---
 
-FIXME: introduction about data journalism, relies on ability to harvest data that is not always available in a form that allows for
-analysis, e.g. lists of members from a political party, etc.
+## What is web scraping?
+Web scraping is a technique for extracting information from websites. This can be done by hand
+but most of the time it is automated in some way. It is closely related to the practice of
+web _indexing_, which is what search engines like Google do when mass analysing the Web to build
+their index. But contrary to _web indexing_, which typically parses the entire content of a web
+page to make it searchable, _web scraping_ targets specific information on the pages visited.
 
-In the next few examples, we will try to extract lists of politicians and their party affiliation from various
-constituencies.
+For example, online stores will often scour the publicly available pages of their competitors,
+scrape item prices and then use this information to adjust their own prices. Another common
+practice is "contact scraping" in which contact information (such as email
+addresses) is collected for marketing purposes.
+
+Web scraping is also increasingly being used by scholars for the purpose of building data sets for
+text mining projects, and journalists. The practice of
+[data journalism](https://en.wikipedia.org/wiki/Data_journalism), in particular, relies on the
+ability for investigative journalists to harvest data that is not always available in a form
+that allows analysis.
+
+## Example: scraping government websites for contact addresses
+
+In this lesson, the examples that we will use all involve extracting contact information
+from government websites listing the members of various constituencies. A practical example
+of why this information would be useful could be an advocacy group wishing to making it easier
+for citizens to contact their representatives about a particular issue. 
 
 Let's start by looking at the current list of members of the Canadian parliament, which is available
 on the [Parliament of Canada website](http://www.parl.gc.ca/Parliamentarians/en/members).
@@ -137,4 +158,9 @@ In this lesson, we will continue exploring the examples above and try different 
 the information they contain. But before we launch into web scraping proper, we need to look
 a bit closer at how information is organized in an HTML document and how to build queries to access
 a specific subset of that information.
+
+# References
+
+* [Web Scraping (Wikipedia)](https://en.wikipedia.org/wiki/Web_scraping)
+* [The Data Journalism Handbook: Getting Data from the Web](http://datajournalismhandbook.org/1.0/en/getting_data_3.html)
 
