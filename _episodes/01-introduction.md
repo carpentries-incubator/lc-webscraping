@@ -16,22 +16,40 @@ keypoints:
 ---
 
 ## What is web scraping?
+
 Web scraping is a technique for extracting information from websites. This can be done manually
-but most of the time it is automated in some way. It is closely related to the practice of
+but it is usually faster, more efficient and less error-prone if it can be automated. 
+
+Web scraping allows you to convert non-tabular or poorly structured data into a usable, structured format, 
+such as a .csv file or spreadsheet.
+
+Scraping can help you acquire data made inaccessible by the way it has been presented online.
+But scraping is about more than just acquiring data: it can help you track changes to data online, and
+help you archive data. In short, it's a skill worth learning.
+
+It is closely related to the practice of
 web _indexing_, which is what search engines like Google do when mass analysing the Web to build
 their index. But contrary to _web indexing_, which typically parses the entire content of a web
 page to make it searchable, _web scraping_ targets specific information on the pages visited.
 
 For example, online stores will often scour the publicly available pages of their competitors,
-scrape item prices and then use this information to adjust their own prices. Another common
+scrape item prices, and then use this information to adjust their own prices. Another common
 practice is "contact scraping" in which contact information (such as email
-addresses) is collected for marketing purposes.
+addresses or phone numbers) is collected for marketing purposes.
 
-Web scraping is also increasingly being used by scholars for the purpose of building data sets for
-text mining projects, and by journalists. The practice of
+Web scraping is also increasingly being used by scholars to create data sets for
+text mining projects, say, collections journal articles or digitised texts. The practice of
 [data journalism](https://en.wikipedia.org/wiki/Data_journalism), in particular, relies on the
 ability for investigative journalists to harvest data that is not always published in a form
 that allows analysis.
+
+## Before you get started
+
+As useful as scraping is, there might be better options. Choose the right (i.e. the easiest) tool for the job.
+
+- Check whether or not you can copy and paste data from a site into Excel or Google Sheets.
+- Look for existing structured data (it may exist).
+- use Freedom of information requests (be specific about the format you want data in).
 
 ## Example: scraping government websites for contact addresses
 
