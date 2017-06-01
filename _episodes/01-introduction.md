@@ -38,7 +38,7 @@ practice is "contact scraping" in which contact information (such as email
 addresses or phone numbers) is collected for marketing purposes.
 
 Web scraping is also increasingly being used by scholars to create data sets for
-text mining projects, say, collections journal articles or digitised texts. The practice of
+text mining projects, say, collections of journal articles or digitised texts. The practice of
 [data journalism](https://en.wikipedia.org/wiki/Data_journalism), in particular, relies on the
 ability for investigative journalists to harvest data that is not always published in a form
 that allows analysis.
