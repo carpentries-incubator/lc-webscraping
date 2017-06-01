@@ -26,7 +26,7 @@ In this section, we will be discussing some of the issues to be aware of when
 scraping websites, and we will establish a [code of conduct (below)](#web-scraping-code-of-conduct)
 to guide our web scraping projects.
 
-> ## This section does not consitute legal advice
+> ## This section does not constitute legal advice
 > 
 > Please note that the information provided on this page is for information
 > purposes only and does not constitute professional legal advice on the
