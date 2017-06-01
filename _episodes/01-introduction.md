@@ -16,7 +16,7 @@ keypoints:
 ---
 
 ## What is web scraping?
-Web scraping is a technique for extracting information from websites. This can be done by hand
+Web scraping is a technique for extracting information from websites. This can be done manually
 but most of the time it is automated in some way. It is closely related to the practice of
 web _indexing_, which is what search engines like Google do when mass analysing the Web to build
 their index. But contrary to _web indexing_, which typically parses the entire content of a web
@@ -28,9 +28,9 @@ practice is "contact scraping" in which contact information (such as email
 addresses) is collected for marketing purposes.
 
 Web scraping is also increasingly being used by scholars for the purpose of building data sets for
-text mining projects, and journalists. The practice of
+text mining projects, and by journalists. The practice of
 [data journalism](https://en.wikipedia.org/wiki/Data_journalism), in particular, relies on the
-ability for investigative journalists to harvest data that is not always available in a form
+ability for investigative journalists to harvest data that is not always published in a form
 that allows analysis.
 
 ## Example: scraping government websites for contact addresses
