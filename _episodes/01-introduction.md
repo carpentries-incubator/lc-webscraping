@@ -18,38 +18,37 @@ keypoints:
 ## What is web scraping?
 
 Web scraping is a technique for extracting information from websites. This can be done manually
-but it is usually faster, more efficient and less error-prone if it can be automated. 
+but it is usually faster, more efficient and less error-prone to automate the task. 
 
-Web scraping allows you to convert non-tabular or poorly structured data into a usable, structured format, 
-such as a .csv file or spreadsheet.
+Web scraping allows you to acquire non-tabular or poorly structured data from websites and convert it 
+into a usable, structured format, such as a .csv file or spreadsheet.
 
-Scraping can help you acquire data made inaccessible by the way it has been presented online.
-But scraping is about more than just acquiring data: it can help you track changes to data online, and
-help you archive data. In short, it's a skill worth learning.
+Scraping is about more than just acquiring data: it can also help you archive data and track changes to data online.
 
 It is closely related to the practice of
-web _indexing_, which is what search engines like Google do when mass analysing the Web to build
-their index. But contrary to _web indexing_, which typically parses the entire content of a web
+web _indexing_, which is what search engines like Google do when mass-analysing the Web to build
+their indices. But contrary to _web indexing_, which typically parses the entire content of a web
 page to make it searchable, _web scraping_ targets specific information on the pages visited.
 
 For example, online stores will often scour the publicly available pages of their competitors,
 scrape item prices, and then use this information to adjust their own prices. Another common
-practice is "contact scraping" in which contact information (such as email
-addresses or phone numbers) is collected for marketing purposes.
+practice is "contact scraping" in which personal information like email
+addresses or phone numbers is collected for marketing purposes.
 
 Web scraping is also increasingly being used by scholars to create data sets for
-text mining projects, say, collections journal articles or digitised texts. The practice of
+text mining projects; these might be collections of journal articles or digitised texts. The practice of
 [data journalism](https://en.wikipedia.org/wiki/Data_journalism), in particular, relies on the
-ability for investigative journalists to harvest data that is not always published in a form
+ability of investigative journalists to harvest data that is not always presented or published in a form
 that allows analysis.
 
 ## Before you get started
 
-As useful as scraping is, there might be better options. Choose the right (i.e. the easiest) tool for the job.
+As useful as scraping is, there might be better options for the task. Choose the right (i.e. the easiest) tool for the job.
 
-- Check whether or not you can copy and paste data from a site into Excel or Google Sheets.
-- Look for existing structured data (it may exist).
-- use Freedom of information requests (be specific about the format you want data in).
+- Check whether or not you can easily copy and paste data from a site into Excel or Google Sheets. This might be quicker than scraping.
+- Check if the site or service already provides an API to extract structured data. If it does, that will be a much more efficient and effective pathway. Good examples are the 
+[Facebook API](https://developers.facebook.com/tools/explorer/), the [Twitter APIs](https://dev.twitter.com/rest/public) or the [YouTube comments API](https://developers.google.com/youtube/v3/docs/commentThreads/list).
+- For much larger needs, Freedom of information requests can be useful. Be specific about the formats required for the data you want.
 
 ## Example: scraping government websites for contact addresses
 
