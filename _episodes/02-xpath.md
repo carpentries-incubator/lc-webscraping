@@ -74,7 +74,7 @@ XML document follows basic syntax rules:
 # XPath Expressions
 
 XPath is written using expressions. Expressions consist of values, e.g., 368, and operators, e.g., +, that will return 
-a single value. `368 + 275` is an example of an expression. It will return the value `643`. In programming terminology, this is called evaluating, which simply means reducing down to a single value. 
+a single value. `368 + 275` is an example of an expression. It will return the value `643`. In programming terminology, this is called evaluating, which simply means reducing down to a single value. A single value with no operators, e.g. `35`, can also be called an expression, though it will evaluate only to its value, e.g. 35.
 
 When expressions are evaluated on XML documents they return an object
 containing the node(s) that you aim to select. Contrary to a flat text document, XML data is structured, as it is
