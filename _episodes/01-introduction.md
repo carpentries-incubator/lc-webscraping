@@ -52,10 +52,9 @@ As useful as scraping is, there might be better options for the task. Choose the
 
 ## Example: scraping government websites for contact addresses
 
-In this lesson, the examples that we will use all involve extracting contact information
-from government websites listing the members of various constituencies. A practical example
-of why this information would be useful could be an advocacy group wishing to making it easier
-for citizens to contact their representatives about a particular issue. 
+In this lesson, we will extract contact information
+from government websites that list the members of various constituencies. Librarians could use this example
+to scrape informatiomn from any site listing contact details. 
 
 Let's start by looking at the current list of members of the Canadian parliament, which is available
 on the [Parliament of Canada website](http://www.parl.gc.ca/Parliamentarians/en/members).
@@ -66,18 +65,17 @@ This is how this page appears in November 2016:
 
 There are several features (circled in the image above) that make the data on this page easier to work with.
 The search, reorder, refine features and display modes hint that the data is actually stored in a (structured)
-database before being displayed on this page. The data can be readily downloaded as a Comma-Separated Values (CSV)
-file or XML, which allows anyone to load this data in their own database, spreadsheet or computer program to
-reuse it.
+database before being displayed on this page. The data can be readily downloaded either as a comma separated values (.csv)
+file or as XML for re-use in their own database, spreadsheet or computer program.
 
-Even though the information displayed in the view above isn't labeled, a person visiting this site with some
-knowledge of Canadian geography and politics is quickly able to figure out what information pertains to the 
-name of the politicians, the geographical area or the political party they represent. This is because human
-beings are usually good at using context and prior knowledge to quickly categorize information.
+Even though the information displayed in the view above is not labelled, anyone visiting this site with some
+knowledge of Canadian geography and politics can see what information pertains to the 
+politicians' names, the geographical area they come from and the political party they represent. This is because human
+beings are good at using context and prior knowledge to quickly categorise information.
 
-Computers, on the other hand, can't do this unless we provide them with more information.
-Fortunately, if we look at the source HTML code of this page, we see that the information displayed is actually
-organized inside labeled elements:
+Computers, on the other hand, cannot do this unless we provide them with more information.
+Fortunately, if we examine the source HTML code of this page, we can see that the information displayed is actually
+organised inside labelled elements:
 
 ~~~
 (...)
@@ -144,7 +142,7 @@ Here is the code for this page:
 {: .output}
 
 We see that this data has been structured for displaying purposes (it is arranged in rows inside
-a table) but the different elements of information are not clearly labeled.
+a table) but the different elements of information are not clearly labelled.
 
 What if we wanted to download this dataset and, for example, compare it with the Canadian list of MPs
 to analyze gender representation, or the representation of political forces in the two groups?
@@ -162,18 +160,12 @@ _web scraping_.
 > (Source: [Wikipedia](https://en.wikipedia.org/wiki/Web_scraping))
 >
 
-This technique is closely related to _web indexing_ which is what search engines like Google do
-to build the database that is queried when users are searching. The difference is that web indexing
-(using tools typically called "bots" or "crawlers") aims to visit _all_ web sites recursively,
-following all links (unless blocked), index all data and store the result in a database and repeat
-every so often to keep their index current.
-
-Web scraping, on the other hand, is a more focused technique, typically targeting one web site at a
+Web scraping typically targets one web site at a
 time to extract unstructured information and put it in a structured form for reuse.
 
 In this lesson, we will continue exploring the examples above and try different techniques to extract
 the information they contain. But before we launch into web scraping proper, we need to look
-a bit closer at how information is organized in an HTML document and how to build queries to access
+a bit closer at how information is organized within an HTML document and how to build queries to access
 a specific subset of that information.
 
 # References
