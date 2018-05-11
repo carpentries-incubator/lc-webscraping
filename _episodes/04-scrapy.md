@@ -57,7 +57,7 @@ comes with a set of scripts to setup a new project and to control the scrapers t
 It also means that Scrapy doesn't work on its own. It requires a working Python installation
 (Python 2.7 and higher or 3.4 and higher - it should work in both Python 2 and 3), and a series of
 libraries to work. If you haven't installed Python or Scrapy on your machine, you can refer to the
-[setup instructions](/library-webscraping/setup). If you install Scrapy as suggested there, it should take care to install all
+[setup instructions](/lc-webscraping/setup). If you install Scrapy as suggested there, it should take care to install all
 required libraries as well.
 
 You can verify that you have the latest version of Scrapy installed by typing
