@@ -165,7 +165,7 @@ a web page.
 >
 > If you are using Safari, you must first turn on the "Develop" menu in order to view the page source, and use the
 > functions that we will use later in this section. To do so, navigate to Safari > Preferences and in the Advanced tab
-> select the "Show Develop in menu bar" option. Note: In recent versions of Safari you must first turn on the "Develop" menu (in Preferences) and then navigate to Develop > Show Javascript Console and then click on the "Console" tab.
+> select the "Show Develop in menu bar" option. Note: In recent versions of Safari you must first turn on the "Develop" menu (in Preferences) and then navigate to `Develop > Show Javascript Console` and then click on the "Console" tab.
 >
 {: .callout}
 
