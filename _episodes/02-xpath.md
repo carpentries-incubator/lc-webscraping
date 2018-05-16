@@ -271,7 +271,7 @@ within a document and what their relationships with each others are.
 For example, to select all the `blockquote` nodes of this page, we can write
 
 ~~~
-$x("html/body/div/blockquote")
+$x("/html/body/div/article/blockquote")
 ~~~
 {: .source}
 
