@@ -124,7 +124,7 @@ Adams, Nigel (Conservative)	Selby and Ainsty
 which is a bit cleaner.
 
 > ## Scrape the list of Ontario MPPs
-> Use Scraper to export the list of [current members of the Ontario Legislative Assembly](http://www.ontla.on.ca/web/members/members_current.do?locale=en)
+> Use Scraper to export the list of [current members of the Ontario Legislative Assembly](https://www.ola.org/en/members/current)
 > and try exporting the results in your favourite spreadsheet or data analysis
 > software.
 >
