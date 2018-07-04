@@ -1,8 +1,9 @@
 ---
 layout: page
 title: Setup
-permalink: /setup/
+root: .
 ---
+
 In order to follow this lesson, you will need to make sure the following software is installed on your computer.
 
 ## Part one: Manually scrape data using browser extensions
