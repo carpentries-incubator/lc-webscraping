@@ -70,10 +70,9 @@ done by inserting a random delay between individual requests, which gives the ta
 time to handle requests from other users between ours. 
 
 This is Scrapy's default behaviour, and it should prevent most scraping projects from ever causing problems.
-To be on the safe side, however, it is good practice to limit the number of pages we are scraping
-while we are still writing and debugging our code. This is why in the previous section, we imposed
-a limit of five pages to be scraped, which we only removed when we were reasonably certain the scraper
-was working as it should.
+To be on the safe side, however, it is good practice to limit the number of pages we are scraping. When debugging code, limit the number of pages one scrapes to a subset of the total if possible.
+
+
 
 Limiting requests to a particular domain, by using Scrapy's `allowed_domains` property is another
 way to make sure our code is not going to start scraping the entire Internet by mistake.
@@ -91,7 +90,7 @@ In practice, however, web scraping is a tolerated practice, provided reasonable
 care is taken not to disrupt the "regular" use of a web site, as we have seen above.
 
 In a sense, web scraping is no different than using a web browser to visit a web page,
-in that it amounts to using computer software (a browser vs a scraper) to acccess
+in that it amounts to using computer software (a browser vs a scraper) to access
 data that is publicly available on the web.
 
 In general, if data is publicly available (the content that is being scraped is not
@@ -107,7 +106,7 @@ copyrighted, information in an aggregate or derivative format is considered
 it word for word or trying to make money out of it, reusing publicly available
 content scraped off the internet is OK.
 
-### Better be safe than sorry
+### Better to be safe than sorry
 Be aware that copyright and data privacy legislation typically differs from country
 to country. Be sure to check the laws that apply in your context. For example, in Australia,
 it can be illegal to scrape and store personal information such as names, phone
@@ -209,5 +208,4 @@ Happy scraping!
   followed indepentently. This lesson is heavily inspired by Software Carpentry.
 * [Data Carpentry](http://www.datacarpentry.org/) is a sister organisation of Software Carpentry
   focused on the fundamental data management skills required to conduct research.
-* [Library Carpentry](https://librarycarpentry.github.io/) is another Software Carpentry spinoff
-  focused on software skills for librarians.
+* [Library Carpentry](https://librarycarpentry.github.io/) is another Software Carpentry spinoff focused on software skills for librarians.
