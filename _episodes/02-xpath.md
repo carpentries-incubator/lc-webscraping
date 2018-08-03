@@ -431,7 +431,7 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > > | `//`| Look anywhere in the document... |
 > > | `h2`| ... for an h2 element ... |
 > > | `[@id = 'select-this-challenge-box']`| ... that has an `id` attribute set to `select-this-challenge-box`... |
-> > | `//`| and select the parent node of that h2 element |
+> > | `..`| and select the parent node of that h2 element |
 > > | `")"`| This is the end of the XPath query. |
 > > | `[0]`| Select the first element of the resulting array (since `$x()` returns an array of nodes and we are only interested in the first one).|
 > >
