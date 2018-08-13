@@ -152,11 +152,11 @@ which is a bit cleaner.
 > > ![Screenshot of the Scraper window on the Ontario MPP page]({{ page.root }}/fig/scraper-ontparl-01.png)
 > > 
 > > This extracts the URLs, but as luck would have it, those URLs are relative to the list
-> > page (i.e. they are missing `http://www.ontla.on.ca/web/members/`). We can use the
+> > page (i.e. they are missing `https://www.ola.org/en/members/current`). We can use the
 > > `concat()` XPath function to construct the full URLs:
 > >
 > > ~~~
-> > concat('http://www.ontla.on.ca/web/members/',*[1]/a/@href)
+> > concat('https://www.ola.org',*[1]/a/@href)
 > > ~~~
 > > {: .source}
 > >
@@ -173,7 +173,7 @@ Sometimes, however, we do have to do a bit of work to get Scraper to select the 
 that we are interested in.
 
 Going back to the example of the Canadian Parliament we saw in the introduction,
-there is a page on the same website that [lists the mailing addresses](http://www.parl.gc.ca/Parliamentarians/en/members/addresses) of all
+there is a page on the same website that [lists the mailing addresses](http://www.ourcommons.ca/Parliamentarians/en/members/addresses) of all
 parliamentarians. We are interested in scraping those addresses.
 
 If we select the addresses for the first MP and try the "Scrape similar" function...
