@@ -73,28 +73,14 @@ XML document follows basic syntax rules:
 
 # XPath Expressions
 
-XPath is written using expressions, and when these expressions are evaluated on XML documents they return an object
-containing the node(s) that you aim to select. Contrary to a flat text document, XML data is structured, as it is
-organized in nodes and subnodes.
-Therefore, when using XPath, we are not querying raw text or data values like we would so using Regular Expressions,
-for example. Instead, XPath makes use of the fact that XML documents are structured and instead navigates through the
-node structure to select the data that we are looking for.
+XPath is written using expressions. Expressions consist of values, e.g., 368, and operators, e.g., +, that will return 
+a single value. `368 + 275` is an example of an expression. It will return the value `643`. In programming terminology, this is called evaluating, which simply means reducing down to a single value. A single value with no operators, e.g. `35`, can also be called an expression, though it will evaluate only to its existing value, e.g. 35.
 
-XPath is typically used to select and compare nodes, not edit them. To manipulate or edit nodes, another language such
-as XQuery would be used instead.
+Using XPath is similar to using advanced search in a library catalogue, where the structured nature of bibliographic information allows us to specify which metadata fields to query. For example, if we want to find books *about* Shakespeare but not works *by* him, we can limit our search function to the `subject` field only.
 
-> ## XPath assumes _structured_ data
->
-> We can think of using XPath as similar to search a library catalogue using the advanced search function.
-> In a catalogue, we can take advantage of the fact that bibliographic information has been properly structured
-> in the database by specifying which metadata fields we want to query. For example, if we are looking for books
-> about Shakespeare but not those written by him, we can use the advanced search function to look for that name
-> in the "title" field only.
->
-> Contrary to Regular Expressions, this means that we don't have to know in advance what the data we are looking for
-> looks like, we just need to know in which node(s) (or fields) it resides.
->
-{: .callout}
+When we use XPath, we do not need to know in advance what the data we want looks like (as we would with regular expressions, where we need to know the pattern of the data). Since XML documents are structured into fields called nodes, XPath makes use of that structure to navigate through the nodes to select the data we want. We just need to know in which nodes within an XML file the data we want to find resides. When XPath expressions are evaluated on XML documents, they return objects containing the nodes that you specify. 
+
+## XPath always assumes *structured* data.
 
 Now let's start using XPath.
 
