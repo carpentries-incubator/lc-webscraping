@@ -165,7 +165,8 @@ a web page.
 >
 > If you are using Safari, you must first turn on the "Develop" menu in order to view the page source, and use the
 > functions that we will use later in this section. To do so, navigate to Safari > Preferences and in the Advanced tab
-> select the "Show Develop in menu bar" option.
+> select the "Show Develop in menu bar" option. Note: In recent versions of Safari you must first turn on the "Develop" 
+> menu (in Preferences) and then navigate to `Develop > Show Javascript Console` and then click on the "Console" tab.
 >
 {: .callout}
 
@@ -249,7 +250,7 @@ Using this syntax, XPath thus allows us to determine the exact _path_ to a node.
 > > ## Solution
 > >
 > > ~~~
-> > $x("/html/body/div/h1[1]")
+> > $x("/html/body/div/article/h1[1]")
 > > ~~~
 > > {: .source}
 > >
@@ -271,7 +272,7 @@ within a document and what their relationships with each others are.
 For example, to select all the `blockquote` nodes of this page, we can write
 
 ~~~
-$x("html/body/div/blockquote")
+$x("/html/body/div/article/blockquote")
 ~~~
 {: .source}
 
@@ -431,7 +432,7 @@ Array [ <blockquote.challenge>, <blockquote.challenge>, <blockquote.challenge>, 
 > > | `//`| Look anywhere in the document... |
 > > | `h2`| ... for an h2 element ... |
 > > | `[@id = 'select-this-challenge-box']`| ... that has an `id` attribute set to `select-this-challenge-box`... |
-> > | `//`| and select the parent node of that h2 element |
+> > | `..`| and select the parent node of that h2 element |
 > > | `")"`| This is the end of the XPath query. |
 > > | `[0]`| Select the first element of the resulting array (since `$x()` returns an array of nodes and we are only interested in the first one).|
 > >
