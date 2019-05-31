@@ -15,7 +15,6 @@ root: .
 
 ## Glossary
 
-
 **CSS selectors**  
 CSS selectors serve a similar function to XPath, in selecting parts of an HTML document, but were designed for web development (for applying styles such as colour to parts of a document). As such, they are more popular, but are limited in what they can express relative to XPath. Every CSS selector can be translated into an equivalent XPath expression, but not vice-versa. CSS selectors are constructed by specifying properties of the targets combined with properties of their context. CSS selectors can be evaluated using the `document.querySelectorAll()` function.
 

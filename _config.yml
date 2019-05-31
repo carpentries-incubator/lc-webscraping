@@ -12,7 +12,6 @@ carpentry: "lc"
 # Overall title for pages.
 title: "Introduction to web scraping"
 
-
 #------------------------------------------------------------
 # Generic settings (should not need to change).
 #------------------------------------------------------------
@@ -60,7 +59,7 @@ collections:
     permalink: /:path/index.html
   extras:
     output: true
-    permalink: /:path/index.html
+permalink: /:path/index.html
 
 # Set the default layout for things in the episodes collection.
 defaults:
@@ -78,7 +77,7 @@ defaults:
       type: extras
     values:
       root: ..
-      layout: page
+layout: page
 
 # Files and directories that are not to be copied.
 exclude:
