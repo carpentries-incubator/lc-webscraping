@@ -12,6 +12,7 @@ root: .
 * [Scrapy tutorial](https://doc.scrapy.org/en/latest/intro/tutorial.html)
 * [How to crawl the web politely](https://blog.scrapinghub.com/2016/08/25/how-to-crawl-the-web-politely-with-scrapy/)
 * [Additional resources on scraping by the School of Data](http://schoolofdata.org/handbook/courses/scraping/)
+* [Web Crawling with Beautiful Soup](https://coderslegacy.com/python/libraries-in-python/python-beautifulsoup-bs4/)
 
 ## Glossary
 
