@@ -196,8 +196,6 @@ Happy scraping!
   short introduction to web scraping, with links to resources e.g. for data journalists.
 * [This blog](https://blog.rubyroidlabs.com/2016/04/web-scraping-1/) has a discussion on
   the legal aspects of web scraping.
-* [This case study](http://naelshiab.com/members-parliament-web-scraping/) is a great example
-  of what can be done using web scraping and how to achieve it.
 * [Scrapy documentation](https://doc.scrapy.org/en/latest/)
 * [morph.io](https://morph.io/) is a cloud-based web scraping platform that supports multiple
   frameworks, interacts with GitHub and provides a built-in way to save and share extracted
