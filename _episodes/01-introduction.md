@@ -54,7 +54,7 @@ As useful as scraping is, there might be better options for the task. Choose the
 
 In this lesson, we will extract contact information
 from government websites that list the members of various constituencies. Librarians could use this example
-to scrape informatiomn from any site listing contact details. 
+to scrape information from any site listing contact details. 
 
 Let's start by looking at the current list of members of the Canadian parliament, which is available
 on the [Parliament of Canada website](http://www.parl.gc.ca/Parliamentarians/en/members).
