@@ -18,8 +18,8 @@ keypoints:
 
 # Using the Scraper Chrome extension
 
-Now we are finally ready to do some web scraping. Let's go back to the list of
-[UK House of Commons members](https://www.parliament.uk/mps-lords-and-offices/mps/). 
+Now we are finally ready to do some web scraping. Let's go back to the list of MPPs in
+the [Legislative Assembly of Ontario](https://www.ola.org/en/members/current).
 
 We are interested in downloading this list to a spreadsheet, with columns for names and
 constituencies. Do do so, we will use the Scraper extension in the Chrome browser
@@ -27,10 +27,10 @@ constituencies. Do do so, we will use the Scraper extension in the Chrome browse
 
 ## Scrape similar
 
-With the extension installed, we can select the first row of the House of Commons members
-list, do a right click and choose "Scrape similar" from the contextual menu:
+With the extension installed, we can select the first row of the Current MPPs table
+right click and choose "Scrape similar" from the contextual menu:
 
-![Screenshot of the Scraper contextual menu]({{ page.root }}/fig/scraper-contextmenu.png)
+![Screenshot of the Scraper contextual menu]({{ page.root }}/fig/scraper-ontario-scrape.png)
 
 Alternatively, the "Scrape similar" option can also be accessed from the Scraper extension
 icon:
@@ -39,7 +39,7 @@ icon:
 
 Either operation will bring up the Scraper window:
 
-![Screenshot of the Scraper main window]({{ page.root }}/fig/scraper-ukparl-01.png)
+![Screenshot of the Scraper main window]({{ page.root }}/fig/scraper-ontario-auto.png)
 
 We recognize that Scraper has generated XPath queries that corresponds to the data we had
 selected upon calling it. The Selector (highlighted in red in the above screenshot)
@@ -64,14 +64,14 @@ returns something like
 which we can explore in the console to make sure this is the right data.
 
 Scraper also recognized that there were two columns in that table, and has accordingly
-created two such columns (highlighted in blue in the screenshot), 
+created two such columns (highlighted in blue in the screenshot),
 each with its own XPath selector, `*[1]` and `*[2]`.
 
 To understand what this means, we have to remember that XPath queries are relative to the
 current context node. The context node has been set by the Selector query above, so
 those queries are relative to the array of `tr` elements that has been selected.
 
-We can replicate their effect by trying out 
+We can replicate their effect by trying out
 
 ~~~
 $x("//tbody/tr[td]/*[1]")
@@ -90,10 +90,11 @@ There is one bit of data cleanup we might want to do, though. If we paste the da
 into a text document, we see something like this:
 
 ~~~
-Name	Constituency
-A	back to top
-                                 Abbott, Ms Diane                                 (Labour)                             	Hackney North and Stoke Newington
-                                 Abrahams, Debbie                                 (Labour)                             	Oldham East and Saddleworth
+MPP	Riding	Party
+Anand, Deepak          	Mississauga—Malton          	Progressive Conservative Party of Ontario
+Andrew, Jill          	Toronto—St. Paul's          	New Democratic Party of Ontario
+Armstrong, Teresa J.          	London—Fanshawe          	New Democratic Party of Ontario
+Arnott, Hon. Ted          	Wellington—Halton Hills          	Progressive Conservative Party of Ontario
 ~~~
 {: .output}
 
@@ -106,18 +107,18 @@ normalize-space(*[1])
 normalize-space(*[2])
 ~~~
 
-![Screenshot of the Scraper window showing the Column selectors]({{ page.root }}/fig/scraper-ukparl-02.png)
+![Screenshot of the Scraper window showing the Column selectors]({{ page.root }}/fig/scraper-ontario-normalized.png)
 
 We now need to tell Scraper to scrape the data again by using our new selectors, this is done by clicking
 on the "Scrape" button. The preview will not noticeably change, but if we now copy again the results
 and paste them in our text editor, we should see
 
 ~~~
-Name	Constituency
-A	back to top
-Abbott, Ms Diane (Labour)	Hackney North and Stoke Newington
-Abrahams, Debbie (Labour)	Oldham East and Saddleworth
-Adams, Nigel (Conservative)	Selby and Ainsty
+MPP	Riding	Party
+Anand, Deepak	Mississauga—Malton	Progressive Conservative Party of Ontario
+Andrew, Jill	Toronto—St. Paul's	New Democratic Party of Ontario
+Armstrong, Teresa J.	London—Fanshawe	New Democratic Party of Ontario
+Arnott, Hon. Ted	Wellington—Halton Hills	Progressive Conservative Party of Ontario
 ~~~
 {: .output}
 
@@ -132,7 +133,7 @@ which is a bit cleaner.
 > the names of the MPPs and that are leading to the detail page for each parliamentarian.
 >
 > Tips:
-> 
+>
 > * To add another column in Scraper, use the little green "+" icon in the columns list.
 > * Look at the source code and try out XPath queries in the console until you find what
 >   you are looking for.
@@ -141,16 +142,16 @@ which is a bit cleaner.
 > * The `concat()` XPath function can be use to concatenate things.
 >
 > > ## Solution
-> > 
+> >
 > > Add a third column with the XPath query
-> > 
+> >
 > > ~~~
 > > *[1]/a/@href
 > > ~~~
 > > {: .source}
 > >
 > > ![Screenshot of the Scraper window on the Ontario MPP page]({{ page.root }}/fig/scraper-ontparl-01.png)
-> > 
+> >
 > > This extracts the URLs, but as luck would have it, those URLs are relative to the list
 > > page (i.e. they are missing `https://www.ola.org/en/members/current`). We can use the
 > > `concat()` XPath function to construct the full URLs:
@@ -203,24 +204,24 @@ elements:
       <span class="addresstype">Hill Office</span>
       <span>Telephone:</span>
       <span>613-992-0946</span>
-      <span>Fax:</span>            
+      <span>Fax:</span>
       <span>613-992-0973</span>
    </li>
    <li>
-         <ul>       
+         <ul>
             <li><span class="addresstype">Constituency Office(s)</span></li>
-            <li>                            
+            <li>
                <span>8119 - 160 Avenue (Main Office)</span>
                <span>Suite 204A</span>
                <span>Edmonton, Alberta</span>
                <span>T5Z 0G3</span>
                <span>Telephone:</span> <span>780-822-1540</span>
-               <span>Fax:</span> <span>780-822-1544</span>                                    
+               <span>Fax:</span> <span>780-822-1544</span>
                <span class="spacer"></span>
-            </li>                         
+            </li>
       </ul>
-   </li>                                   
-</ul>   
+   </li>
+</ul>
 (...)
 ~~~
 {: .output}
@@ -260,9 +261,9 @@ and the addresses are separated.
 >
 >
 > > ## Solution
-> > 
+> >
 > > Add columns with the XPath query
-> > 
+> >
 > > ~~~
 > > ./li[2]/span[3] -> Hill Office Phone
 > > ./li[2]/span[5] -> Hill Office Fax
