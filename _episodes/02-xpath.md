@@ -556,16 +556,16 @@ XPath can do in-text searching using functions and also supports regex with its 
 
 XPath Axes fuller syntax of how to use XPath. Provides all of the different ways to specify the path by describing more fully the relationships between nodes and their connections. The XPath specification describes 13 different axes:
 
-* self ‐‐ the context node itself
-* child ‐‐ the children of the context node
-* descendant ‐‐ all descendants (children+)
-* parent ‐‐ the parent (empty if at the root)
-* ancestor ‐‐ all ancestors from the parent to the root
-* descendant‐or‐self ‐‐ the union of descendant and self • ancestor‐or‐self ‐‐ the union of ancestor and self
-* following‐sibling ‐‐ siblings to the right
-* preceding‐sibling ‐‐ siblings to the left
-* following ‐‐ all following nodes in the document, excluding descendants
-* preceding ‐‐ all preceding nodes in the document, excluding ancestors • attribute ‐‐ the attributes of the context node
+* `self` ‐‐ the context node itself
+* `child` ‐‐ the children of the context node
+* `descendant` ‐‐ all descendants (children+)
+* `parent` ‐‐ the parent (empty if at the root)
+* `ancestor` ‐‐ all ancestors from the parent to the root
+* `descendant‐or‐self` ‐‐ the union of descendant and self • ancestor‐or‐self ‐‐ the union of ancestor and self
+* `following‐sibling` ‐‐ siblings to the right
+* `preceding‐sibling` ‐‐ siblings to the left
+* `following` ‐‐ all following nodes in the document, excluding descendants
+* `preceding` ‐‐ all preceding nodes in the document, excluding ancestors • attribute ‐‐ the attributes of the context node
 
 ![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days]({{ page.root }}/fig/xpath-axes.jpg)
 
