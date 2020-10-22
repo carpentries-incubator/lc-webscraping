@@ -567,8 +567,7 @@ XPath Axes fuller syntax of how to use XPath. Provides all of the different ways
 * following ‐‐ all following nodes in the document, excluding descendants
 * preceding ‐‐ all preceding nodes in the document, excluding ancestors • attribute ‐‐ the attributes of the context node
 
-[![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days](https://kimpham54.github.io/library-webscraping/fig/xpath-axes.jpg)]({{ page.root }}/fig/xpath-axes.jpg)
-
+![XPath Axes Image Credit: SAMS Teach Yourself XSLT in 21 Days]({{ page.root }}/fig/xpath-axes.jpg)
 
 |Path Expression|	Result|
 |-----------------|:-------------|
