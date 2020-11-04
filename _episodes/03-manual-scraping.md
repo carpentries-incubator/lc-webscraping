@@ -33,9 +33,8 @@ right click and choose "Scrape similar" from the contextual menu:
 ![Screenshot of the Scraper contextual menu]({{ page.root }}/fig/scraper-ontario-scrape.png)
 
 Alternatively, the "Scrape similar" option can also be accessed from the Scraper extension
-icon:
-
-![Screenshot of the Scraper menu]({{ page.root }}/fig/scraper-menu.png)
+icon, however this option might return an error on later versions of Chrome. The contextual menu option
+seems to be working better.
 
 Either operation will bring up the Scraper window:
 
@@ -85,6 +84,14 @@ But in this case, we don't need to fiddle with the XPath queries too much, as Sc
 them for us, and we can use the export functions to either create a Google Spreadsheet with the
 results, or copy them into the clipboard in Tab Separated Values (TSV) format for pasting into
 a text document, a spreadsheet or Open Refine.
+
+> ## Google Spreadsheet log-in issues
+>
+> As of November 2020, the function to export results from Scrapy to a Google Spreadsheet looks no
+> longer to be working due to the Scrapy extension not being a trusted app able to access your Google
+> account. Other export methods should be preferred until this is resolved. 
+>
+{: .callout}
 
 There is one bit of data cleanup we might want to do, though. If we paste the data copied from Scraper
 into a text document, we see something like this:
