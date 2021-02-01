@@ -12,7 +12,7 @@ For example it can be contained in a PDF, or a table on a website, or spread acr
 There are a variety of ways to _scrape_ a website to extract information for reuse.
 In its simplest form, this can be achieved by
 copying and pasting snippets from a web page, but this can be unpractical if there is a large amount of data to
-be extracted, or if it spread over a large number of pages. Instead, specialized tools and techniques can be used
+be extracted, or if it is spread over a large number of pages. Instead, specialized tools and techniques can be used
 to automate this process, by defining what sites to visit, what information to look for, and whether data extraction
 should stop once the end of a page has been reached, or whether to follow hyperlinks and repeat the process recursively.
 Automating web scraping also allows to define whether the process should be run at regular intervals and capture changes
