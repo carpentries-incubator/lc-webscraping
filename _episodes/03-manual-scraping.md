@@ -23,7 +23,7 @@ the [Legislative Assembly of Ontario](https://www.ola.org/en/members/current).
 
 We are interested in downloading this list to a spreadsheet, with columns for names and
 constituencies. Do do so, we will use the Scraper extension in the Chrome browser
-(refer to the [Setup](setup/) section for help installing these tools).
+(refer to the [Setup](https://librarycarpentry.org/lc-webscraping/setup.html) section for help installing these tools).
 
 ## Scrape similar
 
